@@ -19,6 +19,6 @@ class TestSubscriber implements Subscribing
     public function processMessage(AMQPEnvelope $amqp_envelope)
     {
         echo $envelope->getBody(), PHP_EOL;
-        $amqp_queue->ack($envelope->getDeliveryTag());
+        $this->getQueue()->ack($envelope->getDeliveryTag());
     }
 }
