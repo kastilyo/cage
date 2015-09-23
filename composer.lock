@@ -1,0 +1,790 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "2b9a32c3cf8948aebf643f7273e2a517",
+    "content-hash": "158657be005fd920c5fbc6a70ef47afc",
+    "packages": [
+        {
+            "name": "calcinai/php-amqplib-bridge",
+            "version": "v0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/calcinai/php-amqplib-bridge.git",
+                "reference": "cc217d4d5a51ef7c96904322957f93ef62f9df50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/calcinai/php-amqplib-bridge/zipball/cc217d4d5a51ef7c96904322957f93ef62f9df50",
+                "reference": "cc217d4d5a51ef7c96904322957f93ef62f9df50",
+                "shasum": ""
+            },
+            "require": {
+                "videlalvaro/php-amqplib": "2.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "AMQP": "src/"
+                },
+                "files": [
+                    "src/Constants.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Calcinai",
+                    "email": "michael@calcin.ai"
+                }
+            ],
+            "description": "Bridge for videlalvaro/php-amqplib to expose classes compatible with PECL::AMQP",
+            "homepage": "https://github.com/calcinai/php-amqplib-bridge/",
+            "time": "2015-06-16 08:52:36"
+        },
+        {
+            "name": "videlalvaro/php-amqplib",
+            "version": "v2.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/videlalvaro/php-amqplib.git",
+                "reference": "eb8f94d97c8e79900accf77343dbd7eca7f58506"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/eb8f94d97c8e79900accf77343dbd7eca7f58506",
+                "reference": "eb8f94d97c8e79900accf77343dbd7eca7f58506",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "suggest": {
+                "ext-sockets": "Use AMQPSocketConnection"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpAmqpLib\\": "PhpAmqpLib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla"
+                }
+            ],
+            "description": "This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/videlalvaro/php-amqplib/",
+            "keywords": [
+                "message",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2015-08-11 12:30:09"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "crysalead/box",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crysalead/box.git",
+                "reference": "1c2fbbf73cf29aedf7f1c0dc0d367c7c0f2e5771"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crysalead/box/zipball/1c2fbbf73cf29aedf7f1c0dc0d367c7c0f2e5771",
+                "reference": "1c2fbbf73cf29aedf7f1c0dc0d367c7c0f2e5771",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "box\\": "src/",
+                    "box\\spec\\": "spec/"
+                },
+                "files": [
+                    "src/init.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Minimalist Dependency Injection Container.",
+            "keywords": [
+                "dependency injection",
+                "dependency injection container",
+                "inversion of control",
+                "ioc"
+            ],
+            "time": "2015-03-21 00:44:48"
+        },
+        {
+            "name": "crysalead/dir",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crysalead/dir.git",
+                "reference": "4d86ccfdb5e2466bca006e76515f51fba4d0b652"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crysalead/dir/zipball/4d86ccfdb5e2466bca006e76515f51fba4d0b652",
+                "reference": "4d86ccfdb5e2466bca006e76515f51fba4d0b652",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "dir\\": "src/",
+                    "dir\\spec\\": "spec/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Recursive directory scanner to locate directories and/or files in a file system",
+            "keywords": [
+                "Directory Scanner",
+                "directory",
+                "file",
+                "file system"
+            ],
+            "time": "2015-03-19 13:42:41"
+        },
+        {
+            "name": "crysalead/filter",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crysalead/filter.git",
+                "reference": "066c2b5eda011245e5adfc1c9ed6450d972b7cec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crysalead/filter/zipball/066c2b5eda011245e5adfc1c9ed6450d972b7cec",
+                "reference": "066c2b5eda011245e5adfc1c9ed6450d972b7cec",
+                "shasum": ""
+            },
+            "require": {
+                "crysalead/jit": "~1.0",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "filter\\": "src/",
+                    "filter\\spec\\": "spec/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CrysaLEAD"
+                }
+            ],
+            "description": "Method filtering system",
+            "keywords": [
+                "aop",
+                "aspect",
+                "aspect programming",
+                "method filtering"
+            ],
+            "time": "2015-03-21 01:36:02"
+        },
+        {
+            "name": "crysalead/jit",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crysalead/jit.git",
+                "reference": "04faf06ee318a0e4995bdc2ef1288a1cb795b65f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crysalead/jit/zipball/04faf06ee318a0e4995bdc2ef1288a1cb795b65f",
+                "reference": "04faf06ee318a0e4995bdc2ef1288a1cb795b65f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "~1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "jit\\": "src/",
+                    "jit\\spec\\": "spec/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Just In Time Code Patcher.",
+            "keywords": [
+                "Code Patcher",
+                "jit"
+            ],
+            "time": "2015-07-27 11:59:46"
+        },
+        {
+            "name": "crysalead/kahlan",
+            "version": "1.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crysalead/kahlan.git",
+                "reference": "8fad06d63a5d7083822041a35a45b98e9b9ce29c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crysalead/kahlan/zipball/8fad06d63a5d7083822041a35a45b98e9b9ce29c",
+                "reference": "8fad06d63a5d7083822041a35a45b98e9b9ce29c",
+                "shasum": ""
+            },
+            "require": {
+                "crysalead/box": "~1.0",
+                "crysalead/dir": "~1.0",
+                "crysalead/filter": "~1.0",
+                "crysalead/jit": "~1.0",
+                "php": ">=5.4"
+            },
+            "bin": [
+                "bin/kahlan"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kahlan\\": "src/",
+                    "kahlan\\spec\\": "spec/"
+                },
+                "files": [
+                    "src/init.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CrysaLEAD"
+                }
+            ],
+            "description": "Behavior-Driven Development (BDD) library.",
+            "keywords": [
+                "BDD",
+                "Behavior-Driven Development",
+                "Monkey Patching",
+                "TDD",
+                "mock",
+                "stub",
+                "testing",
+                "unit test"
+            ],
+            "time": "2015-09-03 14:46:36"
+        },
+        {
+            "name": "dnoegel/php-xdg-base-dir",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dnoegel/php-xdg-base-dir.git",
+                "reference": "265b8593498b997dc2d31e75b89f053b5cc9621a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dnoegel/php-xdg-base-dir/zipball/265b8593498b997dc2d31e75b89f053b5cc9621a",
+                "reference": "265b8593498b997dc2d31e75b89f053b5cc9621a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "@stable"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "XdgBaseDir\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "implementation of xdg base directory specification for php",
+            "time": "2014-10-24 07:27:01"
+        },
+        {
+            "name": "eloquent/liberator",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eloquent/liberator.git",
+                "reference": "8d71b1ff4794b09fc7d0e205ee994780412d3a1f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eloquent/liberator/zipball/8d71b1ff4794b09fc7d0e205ee994780412d3a1f",
+                "reference": "8d71b1ff4794b09fc7d0e205ee994780412d3a1f",
+                "shasum": ""
+            },
+            "require": {
+                "eloquent/pops": "~4.1.0",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eloquent\\Liberator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erin Millard",
+                    "email": "ezzatron@gmail.com",
+                    "homepage": "http://ezzatron.com/"
+                }
+            ],
+            "description": "A proxy for circumventing PHP access modifier restrictions.",
+            "homepage": "https://github.com/eloquent/liberator",
+            "keywords": [
+                "access",
+                "modifier",
+                "object",
+                "private",
+                "protected",
+                "proxy",
+                "reflection"
+            ],
+            "time": "2014-02-09 12:27:12"
+        },
+        {
+            "name": "eloquent/pops",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eloquent/pops.git",
+                "reference": "80dbee5422347dc581d38ade92001509dce34926"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eloquent/pops/zipball/80dbee5422347dc581d38ade92001509dce34926",
+                "reference": "80dbee5422347dc581d38ade92001509dce34926",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eloquent\\Pops\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erin Millard",
+                    "email": "ezzatron@gmail.com",
+                    "homepage": "http://ezzatron.com/"
+                }
+            ],
+            "description": "PHP object proxy system.",
+            "homepage": "https://github.com/eloquent/pops",
+            "keywords": [
+                "method",
+                "object",
+                "property",
+                "proxy"
+            ],
+            "time": "2014-02-09 10:09:42"
+        },
+        {
+            "name": "jakub-onderka/php-console-color",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JakubOnderka/PHP-Console-Color.git",
+                "reference": "e0b393dacf7703fc36a4efc3df1435485197e6c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JakubOnderka/PHP-Console-Color/zipball/e0b393dacf7703fc36a4efc3df1435485197e6c1",
+                "reference": "e0b393dacf7703fc36a4efc3df1435485197e6c1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "jakub-onderka/php-code-style": "1.0",
+                "jakub-onderka/php-parallel-lint": "0.*",
+                "jakub-onderka/php-var-dump-check": "0.*",
+                "phpunit/phpunit": "3.7.*",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JakubOnderka\\PhpConsoleColor": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Onderka",
+                    "email": "jakub.onderka@gmail.com",
+                    "homepage": "http://www.acci.cz"
+                }
+            ],
+            "time": "2014-04-08 15:00:19"
+        },
+        {
+            "name": "jakub-onderka/php-console-highlighter",
+            "version": "v0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JakubOnderka/PHP-Console-Highlighter.git",
+                "reference": "7daa75df45242c8d5b75a22c00a201e7954e4fb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JakubOnderka/PHP-Console-Highlighter/zipball/7daa75df45242c8d5b75a22c00a201e7954e4fb5",
+                "reference": "7daa75df45242c8d5b75a22c00a201e7954e4fb5",
+                "shasum": ""
+            },
+            "require": {
+                "jakub-onderka/php-console-color": "~0.1",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-code-style": "~1.0",
+                "jakub-onderka/php-parallel-lint": "~0.5",
+                "jakub-onderka/php-var-dump-check": "~0.1",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JakubOnderka\\PhpConsoleHighlighter": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Onderka",
+                    "email": "acci@acci.cz",
+                    "homepage": "http://www.acci.cz/"
+                }
+            ],
+            "time": "2015-04-20 18:58:01"
+        },
+        {
+            "name": "nikic/php-parser",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51",
+                "reference": "f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "lib/bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "time": "2015-09-19 14:15:08"
+        },
+        {
+            "name": "psy/psysh",
+            "version": "v0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bobthecow/psysh.git",
+                "reference": "aaf8772ade08b5f0f6830774a5d5c2f800415975"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/aaf8772ade08b5f0f6830774a5d5c2f800415975",
+                "reference": "aaf8772ade08b5f0f6830774a5d5c2f800415975",
+                "shasum": ""
+            },
+            "require": {
+                "dnoegel/php-xdg-base-dir": "0.1",
+                "jakub-onderka/php-console-highlighter": "0.3.*",
+                "nikic/php-parser": "^1.2.1",
+                "php": ">=5.3.9",
+                "symfony/console": "~2.3.10|^2.4.2|~3.0",
+                "symfony/var-dumper": "~2.7|~3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "~1.5",
+                "phpunit/phpunit": "~3.7|~4.0",
+                "squizlabs/php_codesniffer": "~2.0",
+                "symfony/finder": "~2.1|~3.0"
+            },
+            "suggest": {
+                "ext-pcntl": "Enabling the PCNTL extension makes PsySH a lot happier :)",
+                "ext-pdo-sqlite": "The doc command requires SQLite to work.",
+                "ext-posix": "If you have PCNTL, you'll want the POSIX extension as well.",
+                "ext-readline": "Enables support for arrow-key history navigation, and showing and manipulating command history."
+            },
+            "bin": [
+                "bin/psysh"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.6.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Psy/functions.php"
+                ],
+                "psr-0": {
+                    "Psy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Hileman",
+                    "email": "justin@justinhileman.info",
+                    "homepage": "http://justinhileman.com"
+                }
+            ],
+            "description": "An interactive shell for modern PHP.",
+            "homepage": "http://psysh.org",
+            "keywords": [
+                "REPL",
+                "console",
+                "interactive",
+                "shell"
+            ],
+            "time": "2015-07-16 15:26:57"
+        },
+        {
+            "name": "symfony/console",
+            "version": "v2.7.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console.git",
+                "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/9ff9032151186bd66ecee727d728f1319f52d1d8",
+                "reference": "9ff9032151186bd66ecee727d728f1319f52d1d8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/event-dispatcher": "~2.1",
+                "symfony/phpunit-bridge": "~2.7",
+                "symfony/process": "~2.1"
+            },
+            "suggest": {
+                "psr/log": "For using the console logger",
+                "symfony/event-dispatcher": "",
+                "symfony/process": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Console\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "https://symfony.com",
+            "time": "2015-09-03 11:40:38"
+        },
+        {
+            "name": "symfony/var-dumper",
+            "version": "v2.7.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "b39221998ff5fc26ba63f96d2b833dfddc233d57"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/b39221998ff5fc26ba63f96d2b833dfddc233d57",
+                "reference": "b39221998ff5fc26ba63f96d2b833dfddc233d57",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2015-08-31 12:28:11"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.6.0"
+    },
+    "platform-dev": []
+}

@@ -1,0 +1,30 @@
+{
+    "name": "kastilyo/rabbit-hole",
+    "description": "RabbitHole RabbitMQ library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kastilyo",
+            "email": "thekillerchrist@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "calcinai/php-amqplib-bridge": "^0.1.1"
+    },
+    "require-dev": {
+        "crysalead/kahlan": "^1.1",
+        "psy/psysh": "^0.5.2",
+        "eloquent/liberator": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kastilyo\\RabbitHole\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kastilyo\\RabbitHole\\Spec\\": "spec/src"
+        }
+    }
+}
