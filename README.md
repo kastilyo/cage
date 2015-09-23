@@ -24,7 +24,7 @@ class SomeSubscriber implements Subscribing
     public function processMessage(AMQPEnvelope $envelope)
     {
         echo $envelope->getBody(), PHP_EOL;
-        static::$amqp_queue->ack($envelope->getDeliveryTag());
+        $this->acknowledge($envelope->getDeliveryTag());
     }
 }
 ```
