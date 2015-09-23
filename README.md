@@ -27,6 +27,7 @@ class SomeSubscriber implements Subscribing
         static::$amqp_queue->ack($envelope->getDeliveryTag());
     }
 }
+```
 
 ```php
 $subscriber = new Kastilyo\RabbitHole\SomeSubscriber($amqp_connection);
