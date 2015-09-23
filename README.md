@@ -6,7 +6,7 @@ This is a RabbitMQ library heavily inspired by Hutch and may be considered a mis
 
 ``` php
 use Kastilyo\RabbitHole\Subscriber;
-use Kastilyo\RabbitHole\Subscring;
+use Kastilyo\RabbitHole\Subscribing;
 
 class SomeSubscriber implements Subscribing
 {
