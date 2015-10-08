@@ -65,46 +65,82 @@ describe('Subscriber', function () {
                 ));
         });
 
+
         context('Building the queue', function () {
-            it('instantiates the queue builder, passing in the connection', function () {
-                expect(QueueBuilder::class)
-                    ->toReceive('__construct')
-                    ->with($this->amqp_connection);
-                $this->subscriber->consume();
+            context('without a queue builder set', function () {
+                it('instantiates the queue builder, passing in the connection', function () {
+                    expect(QueueBuilder::class)
+                        ->toReceive('__construct')
+                        ->with($this->amqp_connection);
+                    $this->subscriber->consume();
+                });
             });
 
-            it('sets the queue name', function () {
-                expect(QueueBuilder::class)
-                    ->toReceive('setName')
-                    ->with($this->queue_name);
-                $this->subscriber->consume();
-            });
+            context('with a queue builder set', function () {
+                beforeEach(function () {
+                    $this->queue_builder_spy = Stub::create([
+                        'extends' => QueueBuilder::class,
+                        'methods' => ['__construct']
+                    ]);
+                    $this->subscriber->setQueueBuilder($this->queue_builder_spy);
+                });
 
-            it('sets the exchange name', function () {
-                expect(QueueBuilder::class)
-                    ->toReceive('setExchangeName')
-                    ->with($this->exchange_name);
-                $this->subscriber->consume();
-            });
+                it('sets the queue name', function () {
+                    expect($this->queue_builder_spy)
+                        ->toReceive('setName')
+                        ->with($this->queue_name);
+                    $this->subscriber->consume();
+                });
 
-            it('sets the binding keys', function () {
-                expect(QueueBuilder::class)
-                    ->toReceive('setBindingKeys')
-                    ->with($this->binding_keys);
-                $this->subscriber->consume();
-            });
+                it('sets the exchange name', function () {
+                    expect($this->queue_builder_spy)
+                        ->toReceive('setExchangeName')
+                        ->with($this->exchange_name);
+                    $this->subscriber->consume();
+                });
 
-            it('sets it as durable', function () {
-                expect(QueueBuilder::class)
-                    ->toReceive('setFlags')
-                    ->with(AMQP_DURABLE);
-                $this->subscriber->consume();
-            });
+                it('sets the binding keys', function () {
+                    expect($this->queue_builder_spy)
+                        ->toReceive('setBindingKeys')
+                        ->with($this->binding_keys);
+                    $this->subscriber->consume();
+                });
 
-            it('builds the queue', function () {
-                expect(QueueBuilder::class)
-                    ->toReceive('build');
-                $this->subscriber->consume();
+                it('sets it as durable', function () {
+                    expect($this->queue_builder_spy)
+                        ->toReceive('setFlags')
+                        ->with(AMQP_DURABLE);
+                    $this->subscriber->consume();
+                });
+
+                it('builds the queue', function () {
+                    expect($this->queue_builder_spy)
+                        ->toReceive('build');
+                    $this->subscriber->consume();
+                });
+
+                it('calls the above methods in that order', function () {
+                    expect($this->queue_builder_spy)
+                        ->toReceive('setName')
+                        ->with($this->queue_name);
+
+                    expect($this->queue_builder_spy)
+                        ->toReceiveNext('setExchangeName')
+                        ->with($this->exchange_name);
+
+                    expect($this->queue_builder_spy)
+                        ->toReceiveNext('setFlags')
+                        ->with(AMQP_DURABLE);
+
+                    expect($this->queue_builder_spy)
+                        ->toReceiveNext('setBindingKeys')
+                        ->with($this->binding_keys);
+
+                    expect($this->queue_builder_spy)
+                        ->toReceiveNext('build');
+
+                    $this->subscriber->consume();
+                });
             });
         });
     });
