@@ -40,6 +40,12 @@ trait Subscriber
     private $amqp_queue;
 
     /**
+     * [$queue_builder description]
+     * @var [type]
+     */
+    private $queue_builder;
+
+    /**
      * [getExchangeName description]
      * @return [type] [description]
      */
@@ -75,13 +81,24 @@ trait Subscriber
         $this->getQueue();
     }
 
+    public function setQueueBuilder(QueueBuilder $queue_builder)
+    {
+        $this->queue_builder = $queue_builder;
+    }
+
+    private function getQueueBuilder()
+    {
+        return $this->queue_builder ?:
+            ($this->queue_builder = new QueueBuilder($this->amqp_connection));
+    }
+
     /**
      * [buildQueue description]
      * @return [type] [description]
      */
     private function buildQueue()
     {
-        return (new QueueBuilder($this->amqp_connection))
+        return $this->getQueueBuilder()
             ->setName(static::getQueueName())
             ->setExchangeName(static::getExchangeName())
             ->setFlags(AMQP_DURABLE)
