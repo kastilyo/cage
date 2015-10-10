@@ -15,7 +15,8 @@
     "require-dev": {
         "crysalead/kahlan": "^1.1",
         "psy/psysh": "^0.5.2",
-        "eloquent/liberator": "^2.0"
+        "eloquent/liberator": "^2.0",
+        "rdlowrey/auryn": "^1.1"
     },
     "autoload": {
         "psr-4": {
