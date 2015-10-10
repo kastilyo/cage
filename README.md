@@ -5,32 +5,51 @@ This is a RabbitMQ library heavily inspired by Hutch and may be considered a mis
 ## Usage
 
 ``` php
-use Kastilyo\RabbitHole\Subscriber;
-use Kastilyo\RabbitHole\Subscribing;
+namespace Kastilyo\RabbitHole\Spec;
 
-class SomeSubscriber implements Subscribing
+use AMQPConnection;
+use AMQPEnvelope;
+use Kastilyo\RabbitHole\SubscriberTrait;
+use Kastilyo\RabbitHole\SubscriberInterface;
+
+/**
+ * This is a test SubscriberInterface implementation that mixes in SubscriberTrait.
+ * It represents the intended  use of this library.
+ */
+class Subscriber implements SubscriberInterface
 {
-    use Subscriber;
-
-    protected static $amqp_exchange_name = 'some_exchange';
-    protected static $amqp_queue_name = 'some_queue';
-    protected static $amqp_binding_keys = ['some.binding.key', 'another.binding.key'];
+    use SubscriberTrait;
 
     public function __construct(AMQPConnection $amqp_connection)
     {
         $this->amqp_connection = $amqp_connection;
     }
 
-    public function processMessage(AMQPEnvelope $envelope)
+    public static function getExchangeName()
     {
-        echo $envelope->getBody(), PHP_EOL;
-        $this->acknowledge($envelope->getDeliveryTag());
+        return 'test_exchange';
+    }
+
+    public static function getQueueName()
+    {
+        return 'test_queue';
+    }
+
+    public static function getBindingKeys()
+    {
+        return ['test.info'];
+    }
+
+    public function processMessage(AMQPEnvelope $amqp_envelope)
+    {
+        echo $amqp_envelope->getBody(), PHP_EOL;
+        $this->getQueue()->ack($amqp_envelope->getDeliveryTag());
     }
 }
 ```
 
 ```php
-$subscriber = new Kastilyo\RabbitHole\SomeSubscriber($amqp_connection);
+$subscriber = new Kastilyo\RabbitHole\Spec\Subscriber($amqp_connection);
 $subscriber->consume();
 ```
 
