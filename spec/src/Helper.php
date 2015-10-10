@@ -4,6 +4,9 @@ namespace Kastilyo\RabbitHole\Spec;
 use AMQPConnection;
 use kahlan\plugin\Stub;
 
+/**
+ * Helper class for stubbing third-party AMQP classes
+ */
 class Helper
 {
     public static function initializeAMQPStubs()
@@ -15,6 +18,7 @@ class Helper
         Stub::on('AMQPQueue')->method('declareQueue');
         Stub::on('AMQPQueue')->method('bind');
     }
+
     public static function getAMQPConnection()
     {
         return Stub::create([
