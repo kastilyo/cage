@@ -21,7 +21,7 @@ interface Subscribing
      * The name of the subscribed queue
      * @return string
      */
-    public static function getQueueNames();
+    public static function getQueueName();
 
     /**
      * The name of the exchange with the subscribed queue
