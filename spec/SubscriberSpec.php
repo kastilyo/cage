@@ -11,7 +11,7 @@ use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 describe('Subscriber', function () {
     beforeEach(function () {
         $this->amqp_connection = Helper::getAMQPConnection();
-        $this->subscriber = new BaseSubscriber($this->amqp_connection);
+        $this->subscriber = new Subscriber($this->amqp_connection);
     });
 
     describe('->consume', function () {
@@ -44,7 +44,7 @@ describe('Subscriber', function () {
             it('sets the exchange name and then builds', function () {
                 expect($this->exchange_builder_spy)
                     ->toReceive('setName')
-                    ->with(BaseSubscriber::getExchangeName());
+                    ->with(Subscriber::getExchangeName());
                 expect($this->exchange_builder_spy)
                     ->toReceiveNext('build');
                 $this->subscriber->consume();
@@ -55,21 +55,21 @@ describe('Subscriber', function () {
             it('sets the queue name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with(BaseSubscriber::getQueueName());
+                    ->with(Subscriber::getQueueName());
                 $this->subscriber->consume();
             });
 
             it('sets the exchange name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setExchangeName')
-                    ->with(BaseSubscriber::getExchangeName());
+                    ->with(Subscriber::getExchangeName());
                 $this->subscriber->consume();
             });
 
             it('sets the binding keys', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setBindingKeys')
-                    ->with(BaseSubscriber::getBindingKeys());
+                    ->with(Subscriber::getBindingKeys());
                 $this->subscriber->consume();
             });
 
@@ -82,15 +82,15 @@ describe('Subscriber', function () {
             it('calls the above methods in that order', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with(BaseSubscriber::getQueueName());
+                    ->with(Subscriber::getQueueName());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setExchangeName')
-                    ->with(BaseSubscriber::getExchangeName());
+                    ->with(Subscriber::getExchangeName());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setBindingKeys')
-                    ->with(BaseSubscriber::getBindingKeys());
+                    ->with(Subscriber::getBindingKeys());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('build');
@@ -109,25 +109,19 @@ describe('Subscriber', function () {
             });
 
             it('throws an exception when the exchange name is missing', function () {
-                Stub::on(BaseSubscriber::class)
+                Stub::on(Subscriber::class)
                     ->method('::getExchangeName');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when the queue name is missing', function () {
-                Stub::on(BaseSubscriber::class)
+                Stub::on(Subscriber::class)
                     ->method('::getQueueName');
                 $this->expectImplementationException();
             });
 
-            fit('throws an exception when the connection is missing', function () {
-                $this->liberator = Liberator::liberate($this->subscriber);
-                $this->liberator->amqp_connection = null;
-                $this->expectImplementationException();
-            });
-
             it('throws an exception when the binding keys are missing', function () {
-                Stub::on(BaseSubscriber::class)
+                Stub::on(Subscriber::class)
                     ->method('::getBindingKeys');
                 $this->expectImplementationException();
             });
