@@ -156,8 +156,6 @@ trait SubscriberTrait
     public function consume()
     {
         $this->buildExchange();
-        $this->getQueue()->consume(function (AMQPEnvelope $envelope) {
-            $this->processMessage($envelope);
-        });
+        $this->getQueue()->consume([$this, 'processMessage']);
     }
 }

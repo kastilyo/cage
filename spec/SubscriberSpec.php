@@ -126,5 +126,12 @@ describe('Subscriber', function () {
                 $this->expectImplementationException();
             });
         });
+
+        it('sets processMessage as the callback', function () {
+            expect($this->amqp_queue)
+                ->toReceive('consume')
+                ->with([$this->subscriber, 'processMessage']);
+            $this->subscriber->consume();
+        });
     });
 });
