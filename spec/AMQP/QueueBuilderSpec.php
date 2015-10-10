@@ -1,8 +1,9 @@
 <?php
+namespace Kastilyo\RabbitHole\Spec;
+
 use kahlan\plugin\Stub;
 use kahlan\Arg;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
-use Kastilyo\RabbitHole\Spec\Helper;
 
 describe('QueueBuilder', function () {
     beforeEach(function () {
