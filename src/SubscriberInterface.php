@@ -5,11 +5,9 @@ use AMQPEnvelope;
 use AMQPConnection;
 
 /**
- * To be implemented by subscribers. Nearly all getters incorporate 'AMQP'
- * to avoid naming collisions as this interface is intended to be enforced via
- * the Subscriber trait and potentially dropped into any kind of class.
+ * To be implemented by subscribers.
  */
-interface Subscribing
+interface SubscriberInterface
 {
     /**
      * The keys bound to the subscribed queue
