@@ -4,7 +4,7 @@ use kahlan\Arg;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\Spec\Helper;
 
-fdescribe('QueueBuilder', function () {
+describe('QueueBuilder', function () {
     beforeEach(function () {
         Helper::initializeAMQPStubs();
         $this->connection = Helper::getAMQPConnection();
