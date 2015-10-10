@@ -53,6 +53,18 @@ $subscriber = new Kastilyo\RabbitHole\Spec\Subscriber($amqp_connection);
 $subscriber->consume();
 ```
 
+If you have docker and would like to test this out, you can clone this repo and install all dependencies (including dev ones).
+
+Run `docker run -d -p 15672:15672 -p 5672:5672 rabbitmq:3-management` which will run a RabbitMQ docker container with the management installed with the default credentials, forwarding ports 15672 and 5672, in the background.
+
+Then run `php dev/consumer.php` from the root of the project directory which will wait for messages to come in from the queue.
+
+From the rabbitmq management plugin web interface, there should both be a 'test_exchange' exchange and 'test_queue' queue which has the routing key, 'test.info' bound to it.
+
+From the exchange panel, select 'test_exchange' and publish a message with some identifiable content.
+
+The terminal session running `php dev/consumer.php` should have produced the output of the content set in the published message. Graphs in the management interface should indicate that a message was published, consumed and acknowledged.
+
 ## Testing
 
 ``` bash
@@ -61,8 +73,8 @@ $ ./vendor/bin/kahlan
 
 ## Credits
 
-- [kastilyo][https://github.com/kastilyo]
-- [burntbrowniez][https://github.com/burntbrowniez]
+- [kastilyo](https://github.com/kastilyo)
+- [burntbrowniez](https://github.com/burntbrowniez  )
 
 ## License
 
