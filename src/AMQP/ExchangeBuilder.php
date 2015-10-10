@@ -27,6 +27,12 @@ class ExchangeBuilder
             $exchange->declareExchange();
             $this->exchanges[$name] = $exchange;
         }
+        $this->reset();
         return $this->exchanges[$name];
+    }
+
+    private function reset()
+    {
+        $this->name = null;
     }
 }
