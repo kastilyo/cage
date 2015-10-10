@@ -14,19 +14,19 @@ class QueueBuilder
     use ResourceBuilder;
 
     /**
-     * [$queues description]
+     * Object cache of built queues indexed by name
      * @var array
      */
     private $queues = [];
 
     /**
-     * [$exchange_name description]
-     * @var [type]
+     * Name of exchange associated with queue being built
+     * @var string
      */
     private $exchange_name;
 
     /**
-     * [$binding_keys description]
+     * Array of routing keys to bind to the queue
      * @var array
      */
     private $binding_keys = [];
@@ -50,7 +50,7 @@ class QueueBuilder
 
     private function reset()
     {
-        foreach (['name', 'binding_keys', 'flags', 'exchange_name'] as $property) {
+        foreach (['name', 'binding_keys', 'exchange_name'] as $property) {
             $this->$property = null;
         }
     }
