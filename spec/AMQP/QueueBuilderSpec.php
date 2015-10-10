@@ -2,19 +2,12 @@
 use kahlan\plugin\Stub;
 use kahlan\Arg;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
+use Kastilyo\RabbitHole\Spec\Helper;
 
-describe('QueueBuilder', function () {
+fdescribe('QueueBuilder', function () {
     beforeEach(function () {
-        $this->connection = Stub::create([
-            'extends' => 'AMQPConnection',
-            'methods' => ['__construct', 'connect', 'isConnected'],
-        ]);
-
-        Stub::on('AMQPChannel')->method('__construct');
-        Stub::on('AMQPQueue')->method('__construct');
-        Stub::on('AMQPQueue')->method('declareQueue');
-        Stub::on('AMQPQueue')->method('bind');
-
+        Helper::initializeAMQPStubs();
+        $this->connection = Helper::getAMQPConnection();
         $this->queue_builder = new QueueBuilder($this->connection);
     });
 
@@ -22,13 +15,11 @@ describe('QueueBuilder', function () {
         beforeEach(function () {
             $this->queue_name = 'some_queue_name';
             $this->exchange_name = 'some_exchange_name';
-            $this->flags = 'some_flags';
             $this->binding_keys = ['some_binding_key', 'another_binding_key'];
 
             $this->queue_builder
                 ->setName($this->queue_name)
                 ->setExchangeName($this->exchange_name)
-                ->setFlags($this->flags)
                 ->setBindingKeys($this->binding_keys);
         });
 
@@ -66,7 +57,7 @@ describe('QueueBuilder', function () {
             it('sets it as durable', function () {
                 expect('AMQPQueue')
                     ->toReceive('setFlags')
-                    ->with($this->flags);
+                    ->with(AMQP_DURABLE);
                 $this->queue_builder->build();
             });
 

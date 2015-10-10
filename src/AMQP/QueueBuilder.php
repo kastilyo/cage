@@ -37,11 +37,11 @@ class QueueBuilder
         if (!isset($this->queues[$name])) {
             $queue = new AMQPQueue($this->getChannel());
             $queue->setName($name);
-            $queue->setFlags($this->getFlags());
+            $queue->setFlags(AMQP_DURABLE);
+            $queue->declareQueue();
             foreach ($this->getBindingKeys() as $binding_key) {
                 $queue->bind($this->getExchangeName(), $binding_key);
             }
-            $queue->declareQueue();
             $this->queues[$name] = $queue;
         }
         $this->reset();

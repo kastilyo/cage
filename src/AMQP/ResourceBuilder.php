@@ -23,27 +23,12 @@ trait ResourceBuilder
     private $name;
 
     /**
-     * [$flags description]
-     * @var [type]
-     */
-    private $flags;
-
-    /**
      * [__construct description]
      * @param AMQPConnection $connection [description]
      */
     public function __construct(AMQPConnection $connection)
     {
         $this->connection = $connection;
-    }
-
-    /**
-     * [getFlags description]
-     * @return [type] [description]
-     */
-    private function getFlags()
-    {
-        return $this->flags;
     }
 
     /**
@@ -62,16 +47,6 @@ trait ResourceBuilder
     public function setName($name)
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * [setFlags description]
-     * @param [type] $flags [description]
-     */
-    public function setFlags($flags)
-    {
-        $this->flags = $flags;
         return $this;
     }
 
