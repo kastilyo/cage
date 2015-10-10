@@ -4,6 +4,7 @@ namespace Kastilyo\RabbitHole\AMQP;
 use AMQPConnection;
 use AMQPChannel;
 use AMQPQueue;
+use Kastilyo\RabbitHole\InvalidPropertyException;
 
 /**
  * Contains behavior common to declaring queues and exchanges
@@ -37,6 +38,10 @@ trait ResourceBuilder
      */
     private function getName()
     {
+        if (empty($this->name)) {
+            throw new InvalidPropertyException('An invalid name has been set');
+        }
+
         return $this->name;
     }
 

@@ -4,6 +4,7 @@ namespace Kastilyo\RabbitHole\AMQP;
 use AMQPConnection;
 use AMQPChannel;
 use AMQPQueue;
+use Kastilyo\RabbitHole\InvalidPropertyException;
 
 /**
  * Responsible for declaring queues on a RabbitMQ and returning the AMQPQueue
@@ -57,11 +58,19 @@ class QueueBuilder
 
     private function getBindingKeys()
     {
+        if (empty($this->binding_keys)) {
+            throw new InvalidPropertyException("Binding keys haven't been set");
+        } elseif (!is_array($this->binding_keys)) {
+            throw new InvalidPropertyException("Binding keys must be set as an array of strings");
+        }
         return $this->binding_keys;
     }
 
     private function getExchangeName()
     {
+        if (empty($this->exchange_name)) {
+            throw new InvalidPropertyException("An exchange name hasn't been set");
+        }
         return $this->exchange_name;
     }
 

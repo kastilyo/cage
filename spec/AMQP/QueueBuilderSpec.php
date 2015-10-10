@@ -3,6 +3,7 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use kahlan\plugin\Stub;
 use kahlan\Arg;
+use Kastilyo\RabbitHole\InvalidPropertyException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 
 describe('QueueBuilder', function () {
@@ -84,6 +85,36 @@ describe('QueueBuilder', function () {
                         ->with(Arg::notToBeNull(), $binding_key);
                 }
                 $this->queue_builder->build();
+            });
+        });
+
+        context('Exceptional behavior', function () {
+            beforeEach(function () {
+                $this->expectInvalidPropertyException = function () {
+                    expect(function () {
+                        $this->queue_builder->build();
+                    })->toThrow(new InvalidPropertyException);
+                };
+            });
+
+            it("throws an exception when a name hasn't been set", function () {
+                $this->queue_builder->setName(null);
+                $this->expectInvalidPropertyException();
+            });
+
+            it("throws an exception when binding keys haven't been set", function () {
+                $this->queue_builder->setBindingKeys(null);
+                $this->expectInvalidPropertyException();
+            });
+
+            it("throws an exception when non-array binding keys have been set", function () {
+                $this->queue_builder->setBindingKeys('some_binding_key,another_binding_key');
+                $this->expectInvalidPropertyException();
+            });
+
+            it("throws an exception when an exchange name hasn't been set", function () {
+                $this->queue_builder->setExchangeName(null);
+                $this->expectInvalidPropertyException();
             });
         });
     });

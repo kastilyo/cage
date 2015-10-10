@@ -22,7 +22,7 @@ class ExchangeBuilder
         if (!isset($this->exchanges[$name])) {
             $exchange = $this->getExchange();
             $exchange->setType(AMQP_EX_TYPE_TOPIC);
-            $exchange->setName($this->getName());
+            $exchange->setName($name);
             $exchange->setFlags(AMQP_DURABLE);
             $exchange->declareExchange();
             $this->exchanges[$name] = $exchange;

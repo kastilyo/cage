@@ -3,6 +3,7 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use kahlan\plugin\Stub;
 use kahlan\Arg;
+use Kastilyo\RabbitHole\InvalidPropertyException;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 
 describe('ExchangeBuilder', function () {
@@ -60,6 +61,21 @@ describe('ExchangeBuilder', function () {
                 expect('AMQPExchange')
                     ->toReceive('declareExchange');
                 $this->exchange_builder->build();
+            });
+        });
+
+        context('Exceptional behavior', function () {
+            beforeEach(function () {
+                $this->expectInvalidPropertyException = function () {
+                    expect(function () {
+                        $this->exchange_builder->build();
+                    })->toThrow(new InvalidPropertyException);
+                };
+            });
+
+            it("throws an exception when a name hasn't been set", function () {
+                $this->exchange_builder->setName(null);
+                $this->expectInvalidPropertyException();
             });
         });
     });
