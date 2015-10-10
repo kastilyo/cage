@@ -28,6 +28,7 @@ trait Subscriber
      * @var [type]
      */
     private $queue_builder;
+    private $exchange_builder;
 
     public function setQueueBuilder(QueueBuilder $queue_builder)
     {
