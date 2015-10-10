@@ -1,7 +1,8 @@
 <?php
+namespace Kastilyo\RabbitHole\Spec;
+
 use kahlan\plugin\Stub;
 use kahlan\Arg;
-use Kastilyo\RabbitHole\Spec\Helper;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 
 describe('ExchangeBuilder', function () {
