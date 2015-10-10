@@ -1,7 +1,9 @@
 <?php
 namespace Kastilyo\RabbitHole;
 
+use AMQPEnvelope;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
+use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 
 /**
  * This trait is meant to be used by Subscribing implementations. With the
@@ -9,24 +11,6 @@ use Kastilyo\RabbitHole\AMQP\QueueBuilder;
  */
 trait Subscriber
 {
-    /**
-     * [$amqp_exchange_name description]
-     * @var string
-     */
-    protected static $amqp_exchange_name = '';
-
-    /**
-     * [$amqp_queue_name description]
-     * @var string
-     */
-    protected static $amqp_queue_name = '';
-
-    /**
-     * [$amqp_binding_keys description]
-     * @var array
-     */
-    protected static $amqp_binding_keys = [];
-
     /**
      * [$amqp_connection description]
      * @var [type]
@@ -45,42 +29,6 @@ trait Subscriber
      */
     private $queue_builder;
 
-    /**
-     * [getExchangeName description]
-     * @return [type] [description]
-     */
-    public static function getExchangeName()
-    {
-        return static::$amqp_exchange_name;
-    }
-
-    /**
-     * [getQueueName description]
-     * @return [type] [description]
-     */
-    public static function getQueueName()
-    {
-        return static::$amqp_queue_name;
-    }
-
-    /**
-     * [getBindingKeys description]
-     * @return [type] [description]
-     */
-    public static function getBindingKeys()
-    {
-        return static::$amqp_binding_keys;
-    }
-
-    /**
-     * [consume description]
-     * @return [type] [description]
-     */
-    public function consume()
-    {
-        $this->getQueue();
-    }
-
     public function setQueueBuilder(QueueBuilder $queue_builder)
     {
         $this->queue_builder = $queue_builder;
@@ -92,6 +40,24 @@ trait Subscriber
             ($this->queue_builder = new QueueBuilder($this->amqp_connection));
     }
 
+    public function setExchangeBuilder(ExchangeBuilder $exchange_builder)
+    {
+        $this->exchange_builder = $exchange_builder;
+    }
+
+    private function getExchangeBuilder()
+    {
+        return $this->exchange_builder ?:
+            ($this->exchange_builder = new ExchangeBuilder($this->amqp_connection));
+    }
+
+    private function buildExchange()
+    {
+        $this->getExchangeBuilder()
+            ->setName(static::getExchangeName())
+            ->build();
+    }
+
     /**
      * [buildQueue description]
      * @return [type] [description]
@@ -101,7 +67,6 @@ trait Subscriber
         return $this->getQueueBuilder()
             ->setName(static::getQueueName())
             ->setExchangeName(static::getExchangeName())
-            ->setFlags(AMQP_DURABLE)
             ->setBindingKeys(static::getBindingKeys())
             ->build();
     }
@@ -113,5 +78,13 @@ trait Subscriber
     private function getQueue()
     {
         return $this->amqp_queue ?: ($this->amqp_queue = $this->buildQueue());
+    }
+
+    public function consume()
+    {
+        $this->buildExchange();
+        $this->getQueue()->consume(function (AMQPEnvelope $envelope) {
+            $this->processMessage($envelope);
+        });
     }
 }
