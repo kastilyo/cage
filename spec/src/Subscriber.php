@@ -3,13 +3,16 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use AMQPConnection;
 use AMQPEnvelope;
-use Kastilyo\RabbitHole\Subscriber;
-use Kastilyo\RabbitHole\Subscribing;
-use Kastilyo\RabbitHole\AMQP\QueueBuilder;
+use Kastilyo\RabbitHole\SubscriberTrait;
+use Kastilyo\RabbitHole\SubscriberInterface;
 
-class SpecSubscriber implements Subscribing
+/**
+ * This is a test SubscriberInterface implementation that mixes in SubscriberTrait.
+ * It represents the intended use of this library.
+ */
+class Subscriber implements SubscriberInterface
 {
-    use Subscriber;
+    use SubscriberTrait;
 
     public function __construct(AMQPConnection $amqp_connection)
     {
