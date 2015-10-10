@@ -1,10 +1,11 @@
 <?php
 use kahlan\plugin\Stub;
 use kahlan\Arg;
-use Eloquent\Liberator\Liberator;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
+use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 use Kastilyo\RabbitHole\Subscribing;
-use Kastilyo\RabbitHole\Subscriber;
+use Kastilyo\RabbitHole\Spec\SpecSubscriber;
+use Kastilyo\RabbitHole\Spec\Helper;
 
 /**
  * This attempts to test the Subscriber trait in isolation as much as possible,
@@ -13,134 +14,93 @@ use Kastilyo\RabbitHole\Subscriber;
  */
 describe('Subscriber', function () {
     beforeEach(function () {
-        $this->subscriber = Stub::create([
-            'uses' => Subscriber::class,
-        ]);
-
-        // Using Liberator to mess with visibility
-        $this->liberator = Liberator::liberate($this->subscriber);
-
-        $this->liberator->amqp_connection = $this->amqp_connection = Stub::create([
-            'extends' => 'AMQPConnection',
-            'methods' => ['__construct'],
-        ]);
-
-        $this->liberator->amqp_exchange_name = $this->exchange_name = 'some_exchange_name';
-        $this->liberator->amqp_queue_name = $this->queue_name = 'some_queue_name';
-        $this->liberator->amqp_binding_keys = $this->binding_keys = ['some_binding_key', 'another_binding_key'];
-
-        $this->getKlass = function () {
-            return get_class($this->subscriber);
-        };
-    });
-
-    describe('::getExchangeName', function () {
-        it('returns static::$amqp_exchange_name', function () {
-            $klass = $this->getKlass();
-            expect($klass::getExchangeName())->toBe($this->exchange_name);
-        });
-    });
-
-    describe('::getQueueName', function () {
-        it('returns static::$amqp_queue_name', function () {
-            $klass = $this->getKlass();
-            expect($klass::getQueueName())->toBe($this->queue_name);
-        });
-    });
-
-    describe('::getBindingKeys', function () {
-        it('returns static::$amqp_binding_keys', function () {
-            $klass = $this->getKlass();
-            expect($klass::getBindingKeys())->toBe($this->binding_keys);
-        });
+        $this->amqp_connection = Helper::getAMQPConnection();
+        $this->subscriber = new SpecSubscriber($this->amqp_connection);
     });
 
     describe('->consume', function () {
         beforeEach(function () {
             Stub::on(QueueBuilder::class)
                 ->method('build')
-                ->andReturn(($this->amqp_queue = Stub::create([
-                    'extends' => 'AMQPQueue',
-                    'methods' => ['__construct']])
-                ));
+                ->andReturn(($this->amqp_queue = Helper::getAMQPQueue()));
+
+            Stub::on(ExchangeBuilder::class)
+                ->method('build');
+
+            $this->queue_builder_spy = Stub::create([
+                'extends' => QueueBuilder::class,
+                'methods' => ['__construct']
+            ]);
+
+            $this->exchange_builder_spy = Stub::create([
+                'extends' => ExchangeBuilder::class,
+                'methods' => ['__construct']
+            ]);
+
+            Stub::on($this->amqp_queue)
+                ->method('consume');
+
+            $this->subscriber->setQueueBuilder($this->queue_builder_spy);
+            $this->subscriber->setExchangeBuilder($this->exchange_builder_spy);
         });
 
-
-        context('Building the queue', function () {
-            context('without a queue builder set', function () {
-                it('instantiates the queue builder, passing in the connection', function () {
-                    expect(QueueBuilder::class)
-                        ->toReceive('__construct')
-                        ->with($this->amqp_connection);
-                    $this->subscriber->consume();
-                });
+        context('Building the exchange', function () {
+            it('sets the exchange name and then builds', function () {
+                expect($this->exchange_builder_spy)
+                    ->toReceive('setName')
+                    ->with(SpecSubscriber::getExchangeName());
+                expect($this->exchange_builder_spy)
+                    ->toReceiveNext('build');
+                $this->subscriber->consume();
             });
 
-            context('with a queue builder set', function () {
-                beforeEach(function () {
-                    $this->queue_builder_spy = Stub::create([
-                        'extends' => QueueBuilder::class,
-                        'methods' => ['__construct']
-                    ]);
-                    $this->subscriber->setQueueBuilder($this->queue_builder_spy);
-                });
+        });
 
-                it('sets the queue name', function () {
-                    expect($this->queue_builder_spy)
-                        ->toReceive('setName')
-                        ->with($this->queue_name);
-                    $this->subscriber->consume();
-                });
+        context('Building the queue', function () {
+            it('sets the queue name', function () {
+                expect($this->queue_builder_spy)
+                    ->toReceive('setName')
+                    ->with(SpecSubscriber::getQueueName());
+                $this->subscriber->consume();
+            });
 
-                it('sets the exchange name', function () {
-                    expect($this->queue_builder_spy)
-                        ->toReceive('setExchangeName')
-                        ->with($this->exchange_name);
-                    $this->subscriber->consume();
-                });
+            it('sets the exchange name', function () {
+                expect($this->queue_builder_spy)
+                    ->toReceive('setExchangeName')
+                    ->with(SpecSubscriber::getExchangeName());
+                $this->subscriber->consume();
+            });
 
-                it('sets the binding keys', function () {
-                    expect($this->queue_builder_spy)
-                        ->toReceive('setBindingKeys')
-                        ->with($this->binding_keys);
-                    $this->subscriber->consume();
-                });
+            it('sets the binding keys', function () {
+                expect($this->queue_builder_spy)
+                    ->toReceive('setBindingKeys')
+                    ->with(SpecSubscriber::getBindingKeys());
+                $this->subscriber->consume();
+            });
 
-                it('sets it as durable', function () {
-                    expect($this->queue_builder_spy)
-                        ->toReceive('setFlags')
-                        ->with(AMQP_DURABLE);
-                    $this->subscriber->consume();
-                });
+            it('builds the queue', function () {
+                expect($this->queue_builder_spy)
+                    ->toReceive('build');
+                $this->subscriber->consume();
+            });
 
-                it('builds the queue', function () {
-                    expect($this->queue_builder_spy)
-                        ->toReceive('build');
-                    $this->subscriber->consume();
-                });
+            it('calls the above methods in that order', function () {
+                expect($this->queue_builder_spy)
+                    ->toReceive('setName')
+                    ->with(SpecSubscriber::getQueueName());
 
-                it('calls the above methods in that order', function () {
-                    expect($this->queue_builder_spy)
-                        ->toReceive('setName')
-                        ->with($this->queue_name);
+                expect($this->queue_builder_spy)
+                    ->toReceiveNext('setExchangeName')
+                    ->with(SpecSubscriber::getExchangeName());
 
-                    expect($this->queue_builder_spy)
-                        ->toReceiveNext('setExchangeName')
-                        ->with($this->exchange_name);
+                expect($this->queue_builder_spy)
+                    ->toReceiveNext('setBindingKeys')
+                    ->with(SpecSubscriber::getBindingKeys());
 
-                    expect($this->queue_builder_spy)
-                        ->toReceiveNext('setFlags')
-                        ->with(AMQP_DURABLE);
+                expect($this->queue_builder_spy)
+                    ->toReceiveNext('build');
 
-                    expect($this->queue_builder_spy)
-                        ->toReceiveNext('setBindingKeys')
-                        ->with($this->binding_keys);
-
-                    expect($this->queue_builder_spy)
-                        ->toReceiveNext('build');
-
-                    $this->subscriber->consume();
-                });
+                $this->subscriber->consume();
             });
         });
     });
