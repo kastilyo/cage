@@ -74,7 +74,8 @@ $ ./vendor/bin/kahlan
 ## Credits
 
 - [kastilyo](https://github.com/kastilyo)
-- [burntbrowniez](https://github.com/burntbrowniez  )
+- [burntbrowniez](https://github.com/burntbrowniez)
+- [markalexandercastillo](https://github.com/markalexandercastillo)
 
 ## License
 
