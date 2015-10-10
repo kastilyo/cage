@@ -1,21 +1,17 @@
 <?php
+namespace Kastilyo\RabbitHole\Spec;
+
+use Eloquent\Liberator\Liberator;
 use kahlan\plugin\Stub;
 use kahlan\Arg;
+use Kastilyo\RabbitHole\ImplementationException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
-use Kastilyo\RabbitHole\Subscribing;
-use Kastilyo\RabbitHole\Spec\SpecSubscriber;
-use Kastilyo\RabbitHole\Spec\Helper;
 
-/**
- * This attempts to test the Subscriber trait in isolation as much as possible,
- * setting properties that should be set by concretions of Subscribing via
- * reflection
- */
 describe('Subscriber', function () {
     beforeEach(function () {
         $this->amqp_connection = Helper::getAMQPConnection();
-        $this->subscriber = new SpecSubscriber($this->amqp_connection);
+        $this->subscriber = new BaseSubscriber($this->amqp_connection);
     });
 
     describe('->consume', function () {
@@ -48,33 +44,32 @@ describe('Subscriber', function () {
             it('sets the exchange name and then builds', function () {
                 expect($this->exchange_builder_spy)
                     ->toReceive('setName')
-                    ->with(SpecSubscriber::getExchangeName());
+                    ->with(BaseSubscriber::getExchangeName());
                 expect($this->exchange_builder_spy)
                     ->toReceiveNext('build');
                 $this->subscriber->consume();
             });
-
         });
 
         context('Building the queue', function () {
             it('sets the queue name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with(SpecSubscriber::getQueueName());
+                    ->with(BaseSubscriber::getQueueName());
                 $this->subscriber->consume();
             });
 
             it('sets the exchange name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setExchangeName')
-                    ->with(SpecSubscriber::getExchangeName());
+                    ->with(BaseSubscriber::getExchangeName());
                 $this->subscriber->consume();
             });
 
             it('sets the binding keys', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setBindingKeys')
-                    ->with(SpecSubscriber::getBindingKeys());
+                    ->with(BaseSubscriber::getBindingKeys());
                 $this->subscriber->consume();
             });
 
@@ -87,20 +82,54 @@ describe('Subscriber', function () {
             it('calls the above methods in that order', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with(SpecSubscriber::getQueueName());
+                    ->with(BaseSubscriber::getQueueName());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setExchangeName')
-                    ->with(SpecSubscriber::getExchangeName());
+                    ->with(BaseSubscriber::getExchangeName());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setBindingKeys')
-                    ->with(SpecSubscriber::getBindingKeys());
+                    ->with(BaseSubscriber::getBindingKeys());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('build');
 
                 $this->subscriber->consume();
+            });
+        });
+
+        context('Exceptional behavior', function () {
+            beforeEach(function () {
+                $this->expectImplementationException = function () {
+                    expect(function () {
+                        $this->subscriber->consume();
+                    })->toThrow(new ImplementationException);
+                };
+            });
+
+            it('throws an exception when the exchange name is missing', function () {
+                Stub::on(BaseSubscriber::class)
+                    ->method('::getExchangeName');
+                $this->expectImplementationException();
+            });
+
+            it('throws an exception when the queue name is missing', function () {
+                Stub::on(BaseSubscriber::class)
+                    ->method('::getQueueName');
+                $this->expectImplementationException();
+            });
+
+            fit('throws an exception when the connection is missing', function () {
+                $this->liberator = Liberator::liberate($this->subscriber);
+                $this->liberator->amqp_connection = null;
+                $this->expectImplementationException();
+            });
+
+            it('throws an exception when the binding keys are missing', function () {
+                Stub::on(BaseSubscriber::class)
+                    ->method('::getBindingKeys');
+                $this->expectImplementationException();
             });
         });
     });
