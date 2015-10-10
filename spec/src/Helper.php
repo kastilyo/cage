@@ -22,4 +22,12 @@ class Helper
             'methods' => ['__construct', 'connect', 'isConnected'],
         ]);
     }
+
+    public static function getAMQPQueue()
+    {
+        return Stub::create([
+            'extends' => 'AMQPQueue',
+            'methods' => ['__construct']
+        ]);
+    }
 }
