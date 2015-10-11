@@ -16,7 +16,7 @@ class ExchangeBuilder
         return new AMQPExchange($this->getChannel());
     }
 
-    public function build()
+    public function get()
     {
         $name = $this->getName();
         if (!isset($this->exchanges[$name])) {
