@@ -11,21 +11,21 @@ class ExchangeBuilder
 
     private $exchanges = [];
 
-    private function getExchange()
+    private function build()
     {
-        return new AMQPExchange($this->getChannel());
+        $exchange = new AMQPExchange($this->getChannel());
+        $exchange->setType(AMQP_EX_TYPE_TOPIC);
+        $exchange->setName($this->getName());
+        $exchange->setFlags(AMQP_DURABLE);
+        $exchange->declareExchange();
+        return $exchange;
     }
 
     public function get()
     {
         $name = $this->getName();
         if (!isset($this->exchanges[$name])) {
-            $exchange = $this->getExchange();
-            $exchange->setType(AMQP_EX_TYPE_TOPIC);
-            $exchange->setName($name);
-            $exchange->setFlags(AMQP_DURABLE);
-            $exchange->declareExchange();
-            $this->exchanges[$name] = $exchange;
+            $this->exchanges[$name] = $this->build();
         }
         $this->reset();
         return $this->exchanges[$name];
