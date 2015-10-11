@@ -33,4 +33,12 @@ class Helper
             'methods' => ['__construct']
         ]);
     }
+
+    public static function getAMQPEnvelope()
+    {
+        return Stub::create([
+            'extends' => 'AMQPEnvelope',
+            'methods' => ['__construct', 'getDeliveryTag']
+        ]);
+    }
 }
