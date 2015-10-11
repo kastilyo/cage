@@ -153,7 +153,7 @@ trait SubscriberTrait
             return $batch_count;
         }
 
-        throw new ImplementationException('Invalid batch count returned by getBatchCount. Valid values are integers greater than 0');
+        throw new ImplementationException('Invalid batch count returned by getBatchCount.');
     }
 
     /**
