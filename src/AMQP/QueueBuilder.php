@@ -83,9 +83,8 @@ class QueueBuilder
     {
         if (empty($this->binding_keys)) {
             throw new InvalidPropertyException("Binding keys haven't been set");
-        } elseif (!is_array($this->binding_keys)) {
-            throw new InvalidPropertyException("Binding keys must be set as an array of strings");
         }
+
         return $this->binding_keys;
     }
 
