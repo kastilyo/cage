@@ -9,7 +9,7 @@ use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 /**
  * Contains behavior common to declaring queues and exchanges
  */
-trait ResourceBuilder
+trait ResourceBuilderTrait
 {
     /**
      * Connection from which to get AMQPChannels and to declare and use resources

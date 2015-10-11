@@ -12,7 +12,7 @@ use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
  */
 class QueueBuilder
 {
-    use ResourceBuilder;
+    use ResourceBuilderTrait;
 
     /**
      * Object cache of built queues indexed by name

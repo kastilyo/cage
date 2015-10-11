@@ -11,7 +11,7 @@ use AMQPExchange;
  */
 class ExchangeBuilder
 {
-    use ResourceBuilder;
+    use ResourceBuilderTrait;
 
     /**
      * Object cache of built exchanges indexed by name
