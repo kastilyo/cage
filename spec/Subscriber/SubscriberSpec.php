@@ -12,34 +12,32 @@ describe('SubscriberTrait + SubscriberInterface', function () {
     beforeEach(function () {
         $this->amqp_connection = Helper::getAMQPConnection();
         $this->subscriber = new Subscriber($this->amqp_connection);
+
+        Stub::on(QueueBuilder::class)
+            ->method('get')
+            ->andReturn(($this->amqp_queue_spy = Helper::getAMQPQueue()));
+
+        Stub::on(ExchangeBuilder::class)
+            ->method('get');
+
+        $this->queue_builder_spy = Stub::create([
+            'extends' => QueueBuilder::class,
+            'methods' => ['__construct']
+        ]);
+
+        $this->exchange_builder_spy = Stub::create([
+            'extends' => ExchangeBuilder::class,
+            'methods' => ['__construct']
+        ]);
+
+        Stub::on($this->amqp_queue_spy)
+            ->method('consume');
+
+        $this->subscriber->setQueueBuilder($this->queue_builder_spy);
+        $this->subscriber->setExchangeBuilder($this->exchange_builder_spy);
     });
 
     describe('->consume', function () {
-        beforeEach(function () {
-            Stub::on(QueueBuilder::class)
-                ->method('get')
-                ->andReturn(($this->amqp_queue = Helper::getAMQPQueue()));
-
-            Stub::on(ExchangeBuilder::class)
-                ->method('get');
-
-            $this->queue_builder_spy = Stub::create([
-                'extends' => QueueBuilder::class,
-                'methods' => ['__construct']
-            ]);
-
-            $this->exchange_builder_spy = Stub::create([
-                'extends' => ExchangeBuilder::class,
-                'methods' => ['__construct']
-            ]);
-
-            Stub::on($this->amqp_queue)
-                ->method('consume');
-
-            $this->subscriber->setQueueBuilder($this->queue_builder_spy);
-            $this->subscriber->setExchangeBuilder($this->exchange_builder_spy);
-        });
-
         context('Building the exchange', function () {
             it('sets the exchange name and then builds', function () {
                 expect($this->exchange_builder_spy)
@@ -128,10 +126,29 @@ describe('SubscriberTrait + SubscriberInterface', function () {
         });
 
         it('sets processMessage as the callback', function () {
-            expect($this->amqp_queue)
+            expect($this->amqp_queue_spy)
                 ->toReceive('consume')
                 ->with([$this->subscriber, 'processMessage']);
             $this->subscriber->consume();
+        });
+    });
+
+    describe('->acknowledgeMessage', function () {
+        it("calls ack on the queue, passing in the message's delivery tag", function () {
+            $expected_delivery_tag = 'some_delivery_tag';
+            $message_spy = Helper::getAMQPEnvelope();
+            Stub::on($message_spy)
+                ->method('getDeliveryTag')
+                ->andReturn($expected_delivery_tag);
+
+            Stub::on($this->amqp_queue_spy)
+                ->method('ack', function ($delivery_tag, $flags = AMQP_NOPARAM) {});
+
+            expect($this->amqp_queue_spy)
+                ->toReceive('ack')
+                ->with($expected_delivery_tag, Arg::toBeAny());
+
+            $this->subscriber->acknowledgeMessage($message_spy);
         });
     });
 });
