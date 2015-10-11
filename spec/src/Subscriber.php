@@ -37,6 +37,6 @@ class Subscriber implements SubscriberInterface
     public function processMessage(AMQPEnvelope $amqp_envelope)
     {
         echo $amqp_envelope->getBody(), PHP_EOL;
-        $this->getQueue()->ack($amqp_envelope->getDeliveryTag());
+        $this->acknowledgeMessage($amqp_envelope);
     }
 }
