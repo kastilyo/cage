@@ -1,11 +1,11 @@
 <?php
-namespace Kastilyo\RabbitHole;
+namespace Kastilyo\RabbitHole\Subscriber;
 
 use AMQPEnvelope;
 use AMQPConnection;
-use Kastilyo\RabbitHole\InvalidDataException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
+use Kastilyo\RabbitHole\Exceptions\ImplementationException;
 
 /**
  * This trait is meant to be used by Subscribing implementations. With the

@@ -4,7 +4,7 @@ namespace Kastilyo\RabbitHole\Spec;
 use Eloquent\Liberator\Liberator;
 use kahlan\plugin\Stub;
 use kahlan\Arg;
-use Kastilyo\RabbitHole\ImplementationException;
+use Kastilyo\RabbitHole\Exceptions\ImplementationException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 

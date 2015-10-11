@@ -3,8 +3,8 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use AMQPConnection;
 use AMQPEnvelope;
-use Kastilyo\RabbitHole\SubscriberTrait;
-use Kastilyo\RabbitHole\SubscriberInterface;
+use Kastilyo\RabbitHole\Subscriber\SubscriberTrait;
+use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
 
 /**
  * This is a test SubscriberInterface implementation that mixes in SubscriberTrait.

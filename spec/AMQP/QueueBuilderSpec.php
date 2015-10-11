@@ -3,7 +3,7 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use kahlan\plugin\Stub;
 use kahlan\Arg;
-use Kastilyo\RabbitHole\InvalidPropertyException;
+use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 
 describe('QueueBuilder', function () {

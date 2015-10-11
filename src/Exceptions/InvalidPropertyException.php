@@ -1,5 +1,5 @@
 <?php
-namespace Kastilyo\RabbitHole;
+namespace Kastilyo\RabbitHole\Exceptions;
 
 use Exception;
 

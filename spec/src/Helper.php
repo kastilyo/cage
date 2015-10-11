@@ -1,7 +1,6 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use AMQPConnection;
 use kahlan\plugin\Stub;
 
 /**

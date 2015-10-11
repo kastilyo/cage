@@ -4,7 +4,7 @@ namespace Kastilyo\RabbitHole\AMQP;
 use AMQPConnection;
 use AMQPChannel;
 use AMQPQueue;
-use Kastilyo\RabbitHole\InvalidPropertyException;
+use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 
 /**
  * Contains behavior common to declaring queues and exchanges
@@ -13,19 +13,19 @@ trait ResourceBuilder
 {
     /**
      * [$connection description]
-     * @var [type]
+     * @var \AMQPConnection
      */
     private $connection;
 
     /**
      * [$name description]
-     * @var [type]
+     * @var string
      */
     private $name;
 
     /**
-     * [__construct description]
-     * @param AMQPConnection $connection [description]
+     * @param AMQPConnection $connection Connection from which to get channels
+     *                                   and declare and use resources with.
      */
     public function __construct(AMQPConnection $connection)
     {

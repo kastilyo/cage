@@ -4,7 +4,7 @@ namespace Kastilyo\RabbitHole\AMQP;
 use AMQPConnection;
 use AMQPChannel;
 use AMQPQueue;
-use Kastilyo\RabbitHole\InvalidPropertyException;
+use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 
 /**
  * Responsible for declaring queues on a RabbitMQ and returning the AMQPQueue
