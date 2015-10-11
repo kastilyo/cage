@@ -36,7 +36,6 @@ trait SubscriberTrait
      */
     private $exchange_builder;
 
-
     private function getAMQPConnection()
     {
         if ($this->amqp_connection instanceof AMQPConnection) {
@@ -44,6 +43,11 @@ trait SubscriberTrait
         }
 
         throw new ImplementationException('An invalid AMQPConnection has been set');
+    }
+
+    public function setAMQPConnection(AMQPConnection $amqp_connection)
+    {
+        $this->amqp_connection = $amqp_connection;
     }
 
     /**
