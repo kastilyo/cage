@@ -12,20 +12,19 @@ use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 trait ResourceBuilder
 {
     /**
-     * [$connection description]
+     * Connection from which to get AMQPChannels and to declare and use resources
      * @var \AMQPConnection
      */
     private $connection;
 
     /**
-     * [$name description]
+     * Name of the resource
      * @var string
      */
     private $name;
 
     /**
-     * @param AMQPConnection $connection Connection from which to get channels
-     *                                   and declare and use resources with.
+     * @param \AMQPConnection $connection
      */
     public function __construct(AMQPConnection $connection)
     {
@@ -33,8 +32,9 @@ trait ResourceBuilder
     }
 
     /**
-     * [getName description]
-     * @return [type] [description]
+     * Returns the name currently set on the builder
+     * @throws \Kastilyo\RabbitHole\Exceptions\InvalidPropertyException
+     * @return string
      */
     private function getName()
     {
@@ -46,8 +46,9 @@ trait ResourceBuilder
     }
 
     /**
-     * [setName description]
-     * @param [type] $name [description]
+     * Sets the resource name on the builder
+     * @param string $name
+     * @return $this
      */
     public function setName($name)
     {
@@ -56,8 +57,8 @@ trait ResourceBuilder
     }
 
     /**
-     * [getConnection description]
-     * @return [type] [description]
+     * Returns an AMQPConnection instance, ensuring that it is connected
+     * @return \AMQPConnection
      */
     private function getConnection()
     {
@@ -69,8 +70,7 @@ trait ResourceBuilder
     }
 
     /**
-     * [getChannel description]
-     * @return [type] [description]
+     * @return \AMQPChannel
      */
     private function getChannel()
     {
