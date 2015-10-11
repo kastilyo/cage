@@ -16,7 +16,7 @@ class Subscriber implements SubscriberInterface
 
     public function __construct(AMQPConnection $amqp_connection)
     {
-        $this->amqp_connection = $amqp_connection;
+        $this->setAMQPConnection($amqp_connection);
     }
 
     public static function getExchangeName()
