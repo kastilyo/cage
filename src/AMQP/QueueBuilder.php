@@ -33,22 +33,32 @@ class QueueBuilder
     private $binding_keys = [];
 
     /**
-     * Lazily instantiates and declares an AMQPQueue instance based on the
-     * builder's currently set name, exchange_name, and binding_keys.
+     * Creates a fresh AMQPQueue instance, declaring it as durable and with
+     * the currently set name. It will also bind the currently set binding keys
+     * to it.
+     * @return AMQPQueue
+     */
+    private function build()
+    {
+        $queue = new AMQPQueue($this->getChannel());
+        $queue->setName($this->getName());
+        $queue->setFlags(AMQP_DURABLE);
+        $queue->declareQueue();
+        foreach ($this->getBindingKeys() as $binding_key) {
+            $queue->bind($this->getExchangeName(), $binding_key);
+        }
+        return $queue;
+    }
+
+    /**
+     * Lazily returns a fully-prepared AMQPQueue
      * @return \AMQPQueue
      */
     public function get()
     {
         $name = $this->getName();
         if (!isset($this->queues[$name])) {
-            $queue = new AMQPQueue($this->getChannel());
-            $queue->setName($name);
-            $queue->setFlags(AMQP_DURABLE);
-            $queue->declareQueue();
-            foreach ($this->getBindingKeys() as $binding_key) {
-                $queue->bind($this->getExchangeName(), $binding_key);
-            }
-            $this->queues[$name] = $queue;
+            $this->queues[$name] = $this->build();
         }
         $this->reset();
         return $this->queues[$name];
