@@ -146,6 +146,16 @@ trait SubscriberTrait
         throw new ImplementationException('Invalid binding keys have been returned by getBindingKeys');
     }
 
+    private function getAndValidateBatchCount()
+    {
+        $batch_count = static::getBatchCount();
+        if (!empty($batch_count) && is_int($batch_count)) {
+            return $batch_count;
+        }
+
+        throw new ImplementationException('Invalid batch count returned by getBatchCount. Valid values are integers greater than 0');
+    }
+
     /**
      * Prepares a queue via QueueBuilder based on the class's
      * queue name, exchange name and binding keys
@@ -157,7 +167,7 @@ trait SubscriberTrait
             ->setName($this->getAndValidateQueueName())
             ->setExchangeName($this->getAndValidateExchangeName())
             ->setBindingKeys($this->getAndValidateBindingKeys())
-            ->setBatchCount(static::getBatchCount())
+            ->setBatchCount($this->getAndValidateBatchCount())
             ->get();
     }
 

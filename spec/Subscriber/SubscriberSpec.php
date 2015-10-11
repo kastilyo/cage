@@ -174,6 +174,20 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                     ->method('::getBindingKeys');
                 $this->expectImplementationException();
             });
+
+            it('throws an exception when batch count is an empty value', function () {
+                Stub::on($this->subscriber)
+                    ->method('::getBatchCount');
+                $this->expectImplementationException();
+            });
+
+            it('throws an exception when batch count is non-integer value', function () {
+                Stub::on($this->subscriber)
+                    ->method('::getBatchCount', function () {
+                        return 'asdf';
+                    });
+                $this->expectImplementationException();
+            });
         });
 
         it('sets processMessage as the callback', function () {
