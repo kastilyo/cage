@@ -95,6 +95,10 @@ trait SubscriberTrait
             ->get();
     }
 
+    /**
+     * @throws \Kastilyo\RabbitHole\Exceptions\ImplementationException For empty exchange names
+     * @return string Name of exchange associated with subscribed queue
+     */
     private function getAndValidateExchangeName()
     {
         $exchange_name = static::getExchangeName();
@@ -105,6 +109,10 @@ trait SubscriberTrait
         throw new ImplementationException('An empty exchange name has been returned by getExchangeName');
     }
 
+    /**
+     * @throws \Kastilyo\RabbitHole\Exceptions\ImplementationException For empty queue names
+     * @return string Name of queue to subscribe to
+     */
     private function getAndValidateQueueName()
     {
         $queue_name = static::getQueueName();
@@ -115,6 +123,10 @@ trait SubscriberTrait
         throw new ImplementationException('An empty queue name has been returned by getQueueName');
     }
 
+    /**
+     * @throws \Kastilyo\RabbitHole\Exceptions\ImplementationException For empty binding keys
+     * @return array Routing keys to be bound to the subscribed queue
+     */
     private function getAndValidateBindingKeys()
     {
         $binding_keys = static::getBindingKeys();
