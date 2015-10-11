@@ -32,7 +32,12 @@ class QueueBuilder
      */
     private $binding_keys = [];
 
-    public function build()
+    /**
+     * Lazily instantiates and declares an AMQPQueue instance based on the
+     * builder's currently set name, exchange_name, and binding_keys.
+     * @return \AMQPQueue
+     */
+    public function get()
     {
         $name = $this->getName();
         if (!isset($this->queues[$name])) {
@@ -49,13 +54,21 @@ class QueueBuilder
         return $this->queues[$name];
     }
 
+    /**
+     * Resets the state of the builder
+     */
     private function reset()
     {
         foreach (['name', 'binding_keys', 'exchange_name'] as $property) {
-            $this->$property = null;
+            $this->$property = is_array($this->$property) ? [] : null;
         }
     }
 
+    /**
+     * Returns the currently set $binding_keys property
+     * @throws \Kastilyo\RabbitHole\Exceptions\InvalidPropertyException For empty or non-array values
+     * @return array
+     */
     private function getBindingKeys()
     {
         if (empty($this->binding_keys)) {
@@ -66,6 +79,10 @@ class QueueBuilder
         return $this->binding_keys;
     }
 
+    /**
+     * @throws \Kastilyo\RabbitHole\Exceptions\InvalidPropertyException For empty values
+     * @return string The currently set $exchange_name property
+     */
     private function getExchangeName()
     {
         if (empty($this->exchange_name)) {
@@ -74,12 +91,20 @@ class QueueBuilder
         return $this->exchange_name;
     }
 
-    public function setBindingKeys($binding_keys)
+    /**
+     * @param array $binding_keys Array of routing keys to bind to the queue
+     * @return $this
+     */
+    public function setBindingKeys(array $binding_keys)
     {
         $this->binding_keys = $binding_keys;
         return $this;
     }
 
+    /**
+     * @param string $name Name of the exchange on which to declare the queue
+     * @return $this
+     */
     public function setExchangeName($name)
     {
         $this->exchange_name = $name;
