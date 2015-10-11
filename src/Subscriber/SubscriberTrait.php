@@ -8,8 +8,7 @@ use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 use Kastilyo\RabbitHole\Exceptions\ImplementationException;
 
 /**
- * This trait is meant to be used by Subscribing implementations. With the
- * exception of processMessage, this provides implementations of the contract.
+ * This trait is meant to be mixed into SubscriberInterface implementations.
  */
 trait SubscriberTrait
 {
@@ -93,7 +92,7 @@ trait SubscriberTrait
     {
         $this->getExchangeBuilder()
             ->setName($this->getAndValidateExchangeName())
-            ->build();
+            ->get();
     }
 
     private function getAndValidateExchangeName()
@@ -137,7 +136,7 @@ trait SubscriberTrait
             ->setName($this->getAndValidateQueueName())
             ->setExchangeName($this->getAndValidateExchangeName())
             ->setBindingKeys($this->getAndValidateBindingKeys())
-            ->build();
+            ->get();
     }
 
     /**
