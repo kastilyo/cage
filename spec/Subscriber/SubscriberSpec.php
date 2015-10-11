@@ -8,7 +8,7 @@ use Kastilyo\RabbitHole\Exceptions\ImplementationException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 
-describe('Subscriber', function () {
+describe('SubscriberTrait + SubscriberInterface', function () {
     beforeEach(function () {
         $this->amqp_connection = Helper::getAMQPConnection();
         $this->subscriber = new Subscriber($this->amqp_connection);
