@@ -145,7 +145,8 @@ trait SubscriberTrait
      */
     private function getQueue()
     {
-        return $this->amqp_queue ?: ($this->amqp_queue = $this->buildQueue());
+        $queue = $this->amqp_queue ?: ($this->amqp_queue = $this->buildQueue());
+        return $queue;
     }
 
     /**
@@ -156,5 +157,14 @@ trait SubscriberTrait
     {
         $this->buildExchange();
         $this->getQueue()->consume([$this, 'processMessage']);
+    }
+
+    /**
+     * Acknowledes the given message
+     * @return \AMQPEnvelope
+     */
+    public function acknowledgeMessage(AMQPEnvelope $amqp_envelope)
+    {
+        $this->getQueue()->ack($amqp_envelope->getDeliveryTag());
     }
 }
