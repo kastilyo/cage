@@ -1,7 +1,6 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use Eloquent\Liberator\Liberator;
 use kahlan\plugin\Stub;
 use kahlan\Arg;
 use Kastilyo\RabbitHole\Exceptions\ImplementationException;
@@ -10,8 +9,32 @@ use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 
 describe('SubscriberTrait + SubscriberInterface', function () {
     beforeEach(function () {
+        $exchange_name = $this->exchange_name = 'test_exchange';
+        $queue_name = $this->queue_name = 'test_queue';
+        $binding_keys = $this->binding_keys = ['test.info'];
         $this->amqp_connection = Helper::getAMQPConnection();
-        $this->subscriber = new Subscriber($this->amqp_connection);
+        $this->subscriber = Stub::create([
+            'implements' => ['Kastilyo\RabbitHole\Subscriber\SubscriberInterface'],
+            'uses' => 'Kastilyo\RabbitHole\Subscriber\SubscriberTrait',
+        ]);
+
+        // well-behaved implementation
+        Stub::on($this->subscriber)
+            ->methods([
+                '::getExchangeName' => function () use ($exchange_name) {
+                    return $exchange_name;
+                },
+                '::getQueueName' => function () use ($queue_name) {
+                    return $queue_name;
+                },
+                '::getBindingKeys' => function () use ($binding_keys) {
+                    return $binding_keys;
+                },
+                'processMessage' => function (AMQPEnvelope $amqp_envelope) {
+                    echo $amqp_envelope->getBody(), PHP_EOL;
+                    $this->acknowledgeMessage($amqp_envelope);
+                },
+            ]);
 
         Stub::on(QueueBuilder::class)
             ->method('get')
@@ -35,6 +58,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
         $this->subscriber->setQueueBuilder($this->queue_builder_spy);
         $this->subscriber->setExchangeBuilder($this->exchange_builder_spy);
+        $this->subscriber->setAMQPConnection($this->amqp_connection);
     });
 
     describe('->consume', function () {
@@ -42,7 +66,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('sets the exchange name and then builds', function () {
                 expect($this->exchange_builder_spy)
                     ->toReceive('setName')
-                    ->with(Subscriber::getExchangeName());
+                    ->with($this->exchange_name);
                 expect($this->exchange_builder_spy)
                     ->toReceiveNext('get');
                 $this->subscriber->consume();
@@ -53,21 +77,21 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('sets the queue name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with(Subscriber::getQueueName());
+                    ->with($this->queue_name);
                 $this->subscriber->consume();
             });
 
             it('sets the exchange name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setExchangeName')
-                    ->with(Subscriber::getExchangeName());
+                    ->with($this->exchange_name);
                 $this->subscriber->consume();
             });
 
             it('sets the binding keys', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setBindingKeys')
-                    ->with(Subscriber::getBindingKeys());
+                    ->with($this->binding_keys);
                 $this->subscriber->consume();
             });
 
@@ -80,15 +104,15 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('calls the above methods in that order', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with(Subscriber::getQueueName());
+                    ->with($this->queue_name);
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setExchangeName')
-                    ->with(Subscriber::getExchangeName());
+                    ->with($this->exchange_name);
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setBindingKeys')
-                    ->with(Subscriber::getBindingKeys());
+                    ->with($this->binding_keys);
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('get');
@@ -107,19 +131,19 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             });
 
             it('throws an exception when the exchange name is missing', function () {
-                Stub::on(Subscriber::class)
+                Stub::on($this->subscriber)
                     ->method('::getExchangeName');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when the queue name is missing', function () {
-                Stub::on(Subscriber::class)
+                Stub::on($this->subscriber)
                     ->method('::getQueueName');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when the binding keys are missing', function () {
-                Stub::on(Subscriber::class)
+                Stub::on($this->subscriber)
                     ->method('::getBindingKeys');
                 $this->expectImplementationException();
             });
