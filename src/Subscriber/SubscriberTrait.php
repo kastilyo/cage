@@ -50,6 +50,11 @@ trait SubscriberTrait
         $this->amqp_connection = $amqp_connection;
     }
 
+    public static function getBatchCount()
+    {
+        return 1;
+    }
+
     /**
      * Setter injection for QueueBuilder
      * @param \Kastilyo\RabbitHole\AMQPQueueBuilder $queue_builder

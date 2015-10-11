@@ -3,6 +3,8 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use kahlan\plugin\Stub;
 use kahlan\Arg;
+use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
+use Kastilyo\RabbitHole\Subscriber\SubscriberTrait;
 use Kastilyo\RabbitHole\Exceptions\ImplementationException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
@@ -14,10 +16,9 @@ describe('SubscriberTrait + SubscriberInterface', function () {
         $binding_keys = $this->binding_keys = ['test.info'];
         $this->amqp_connection = Helper::getAMQPConnection();
         $this->subscriber = Stub::create([
-            'implements' => ['Kastilyo\RabbitHole\Subscriber\SubscriberInterface'],
-            'uses' => 'Kastilyo\RabbitHole\Subscriber\SubscriberTrait',
+            'implements' => [SubscriberInterface::class],
+            'uses' => SubscriberTrait::class,
         ]);
-
         // well-behaved implementation
         Stub::on($this->subscriber)
             ->methods([
@@ -29,6 +30,11 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 },
                 '::getBindingKeys' => function () use ($binding_keys) {
                     return $binding_keys;
+                },
+                '::getBatchCount' => function () {
+                    $subscriber =  Stub::create(['uses' => SubscriberTrait::class]);
+                    // persisting trait implementation of this method to the stub
+                    return $subscriber::getBatchCount();
                 },
                 'processMessage' => function (AMQPEnvelope $amqp_envelope) {
                     echo $amqp_envelope->getBody(), PHP_EOL;
@@ -59,6 +65,13 @@ describe('SubscriberTrait + SubscriberInterface', function () {
         $this->subscriber->setQueueBuilder($this->queue_builder_spy);
         $this->subscriber->setExchangeBuilder($this->exchange_builder_spy);
         $this->subscriber->setAMQPConnection($this->amqp_connection);
+    });
+
+    describe('::getBatchCount', function () {
+        it('has a default implementation of 1', function () {
+            $klass = get_class($this->subscriber);
+            expect($klass::getBatchCount())->toBe(1);
+        });
     });
 
     describe('->consume', function () {

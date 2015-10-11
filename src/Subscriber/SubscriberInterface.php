@@ -27,6 +27,13 @@ interface SubscriberInterface
      */
     public static function getExchangeName();
 
+
+    /**
+     * Returns the number of unacknowledged messages to get consume
+     * @return int
+     */
+    public static function getBatchCount();
+
     /**
      * Handle a message from the queue
      * @param  AMQPEnvelope $amqp_envelope
