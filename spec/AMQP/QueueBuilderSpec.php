@@ -10,6 +10,10 @@ describe('QueueBuilder', function () {
     beforeEach(function () {
         Helper::initializeAMQPStubs();
         $this->connection = Helper::getAMQPConnection();
+        $this->channel = Helper::getAMQPChannel();
+        Stub::on('AMQPQueue')
+            ->method('getChannel')
+            ->andReturn($this->channel);
         $this->queue_builder = new QueueBuilder($this->connection);
     });
 
@@ -46,6 +50,13 @@ describe('QueueBuilder', function () {
                 expect('AMQPChannel')
                     ->toReceive('__construct')
                     ->with($this->connection);
+                $this->queue_builder->get();
+            });
+
+            it('sets qos prefetch count to 1 by default', function () {
+                expect($this->channel)
+                    ->toReceive('qos')
+                    ->with(0, 1);
                 $this->queue_builder->get();
             });
 
@@ -109,6 +120,11 @@ describe('QueueBuilder', function () {
 
             it("throws an exception when an exchange name hasn't been set", function () {
                 $this->queue_builder->setExchangeName(null);
+                $this->expectInvalidPropertyException();
+            });
+
+            it("throws an exception when a batch count of 0 has been set", function () {
+                $this->queue_builder->setBatchCount(0);
                 $this->expectInvalidPropertyException();
             });
         });

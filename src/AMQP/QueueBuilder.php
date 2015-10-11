@@ -33,6 +33,12 @@ class QueueBuilder
     private $binding_keys = [];
 
     /**
+     * Number of unacknowledged messages to consume at once
+     * @var integer
+     */
+    private $batch_count = 1;
+
+    /**
      * Creates a fresh AMQPQueue instance, declaring it as durable and with
      * the currently set name. It will also bind the currently set binding keys
      * to it.
@@ -41,6 +47,7 @@ class QueueBuilder
     private function build()
     {
         $queue = new AMQPQueue($this->getChannel());
+        $queue->getChannel()->qos(($prefetch_size = 0), $this->getBatchCount());
         $queue->setName($this->getName());
         $queue->setFlags(AMQP_DURABLE);
         $queue->declareQueue();
@@ -72,6 +79,15 @@ class QueueBuilder
         foreach (['name', 'binding_keys', 'exchange_name'] as $property) {
             $this->$property = is_array($this->$property) ? [] : null;
         }
+    }
+
+    private function getBatchCount()
+    {
+        if (empty($this->batch_count)) {
+            throw new InvalidPropertyException("Need to set a batch count of 1 or more");
+        }
+
+        return $this->batch_count;
     }
 
     /**
@@ -117,6 +133,15 @@ class QueueBuilder
     public function setExchangeName($name)
     {
         $this->exchange_name = $name;
+        return $this;
+    }
+
+    /**
+     * @param int $batch_count Number of unacknowledged messages to consume at once
+     */
+    public function setBatchCount($batch_count)
+    {
+        $this->batch_count = (int) $batch_count;
         return $this;
     }
 }
