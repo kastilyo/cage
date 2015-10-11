@@ -87,6 +87,14 @@ describe('SubscriberTrait + SubscriberInterface', function () {
         });
 
         context('Building the queue', function () {
+            it('sets the batch count', function () {
+                $klass = get_class($this->subscriber);
+                expect($this->queue_builder_spy)
+                    ->toReceive('setBatchCount')
+                    ->with($klass::getBatchCount());
+                $this->subscriber->consume();
+            });
+
             it('sets the queue name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
@@ -115,6 +123,8 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             });
 
             it('calls the above methods in that order', function () {
+                $klass = get_class($this->subscriber);
+
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
                     ->with($this->queue_name);
@@ -126,6 +136,10 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setBindingKeys')
                     ->with($this->binding_keys);
+
+                expect($this->queue_builder_spy)
+                    ->toReceive('setBatchCount')
+                    ->with($klass::getBatchCount());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('get');
