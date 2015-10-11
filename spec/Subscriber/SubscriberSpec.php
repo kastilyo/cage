@@ -17,11 +17,11 @@ describe('SubscriberTrait + SubscriberInterface', function () {
     describe('->consume', function () {
         beforeEach(function () {
             Stub::on(QueueBuilder::class)
-                ->method('build')
+                ->method('get')
                 ->andReturn(($this->amqp_queue = Helper::getAMQPQueue()));
 
             Stub::on(ExchangeBuilder::class)
-                ->method('build');
+                ->method('get');
 
             $this->queue_builder_spy = Stub::create([
                 'extends' => QueueBuilder::class,
@@ -46,7 +46,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                     ->toReceive('setName')
                     ->with(Subscriber::getExchangeName());
                 expect($this->exchange_builder_spy)
-                    ->toReceiveNext('build');
+                    ->toReceiveNext('get');
                 $this->subscriber->consume();
             });
         });
@@ -75,7 +75,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
             it('builds the queue', function () {
                 expect($this->queue_builder_spy)
-                    ->toReceive('build');
+                    ->toReceive('get');
                 $this->subscriber->consume();
             });
 
@@ -93,7 +93,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                     ->with(Subscriber::getBindingKeys());
 
                 expect($this->queue_builder_spy)
-                    ->toReceiveNext('build');
+                    ->toReceiveNext('get');
 
                 $this->subscriber->consume();
             });

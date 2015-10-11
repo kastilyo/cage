@@ -13,7 +13,7 @@ describe('QueueBuilder', function () {
         $this->queue_builder = new QueueBuilder($this->connection);
     });
 
-    describe('->build', function () {
+    describe('->get', function () {
         beforeEach(function () {
             $this->queue_name = 'some_queue_name';
             $this->exchange_name = 'some_exchange_name';
@@ -28,7 +28,7 @@ describe('QueueBuilder', function () {
         it("makes the connection if it hasn't been made yet", function () {
             expect($this->connection)
                 ->toReceive('connect');
-            $this->queue_builder->build();
+            $this->queue_builder->get();
         });
 
         it("doesn't make the connection if it's been made already", function () {
@@ -38,7 +38,7 @@ describe('QueueBuilder', function () {
             expect($this->connection)
                 ->not
                 ->toReceive('connect');
-            $this->queue_builder->build();
+            $this->queue_builder->get();
         });
 
         context('Queue declaration', function () {
@@ -46,27 +46,27 @@ describe('QueueBuilder', function () {
                 expect('AMQPChannel')
                     ->toReceive('__construct')
                     ->with($this->connection);
-                $this->queue_builder->build();
+                $this->queue_builder->get();
             });
 
             it('sets the name', function () {
                 expect('AMQPQueue')
                     ->toReceive('setName')
                     ->with($this->queue_name);
-                $this->queue_builder->build();
+                $this->queue_builder->get();
             });
 
             it('sets it as durable', function () {
                 expect('AMQPQueue')
                     ->toReceive('setFlags')
                     ->with(AMQP_DURABLE);
-                $this->queue_builder->build();
+                $this->queue_builder->get();
             });
 
             it('performs the declaration', function () {
                 expect('AMQPQueue')
                     ->toReceive('declareQueue');
-                $this->queue_builder->build();
+                $this->queue_builder->get();
             });
         });
 
@@ -75,7 +75,7 @@ describe('QueueBuilder', function () {
                 expect('AMQPQueue')
                     ->toReceive('bind')
                     ->with($this->exchange_name, Arg::toBeAny());
-                $this->queue_builder->build();
+                $this->queue_builder->get();
             });
 
             it('binds with the binding keys', function () {
@@ -84,7 +84,7 @@ describe('QueueBuilder', function () {
                         ->toReceive('bind')
                         ->with(Arg::toBeAny(), $binding_key);
                 }
-                $this->queue_builder->build();
+                $this->queue_builder->get();
             });
         });
 
@@ -92,7 +92,7 @@ describe('QueueBuilder', function () {
             beforeEach(function () {
                 $this->expectInvalidPropertyException = function () {
                     expect(function () {
-                        $this->queue_builder->build();
+                        $this->queue_builder->get();
                     })->toThrow(new InvalidPropertyException);
                 };
             });
@@ -103,12 +103,7 @@ describe('QueueBuilder', function () {
             });
 
             it("throws an exception when binding keys haven't been set", function () {
-                $this->queue_builder->setBindingKeys(null);
-                $this->expectInvalidPropertyException();
-            });
-
-            it("throws an exception when non-array binding keys have been set", function () {
-                $this->queue_builder->setBindingKeys('some_binding_key,another_binding_key');
+                $this->queue_builder->setBindingKeys([]);
                 $this->expectInvalidPropertyException();
             });
 

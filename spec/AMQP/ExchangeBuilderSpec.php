@@ -13,7 +13,7 @@ describe('ExchangeBuilder', function () {
         $this->exchange_builder = new ExchangeBuilder($this->connection);
     });
 
-    context('->build', function () {
+    context('->get', function () {
         beforeEach(function () {
             $this->exchange_name = 'some_exchange';
             $this->exchange_builder->setName($this->exchange_name);
@@ -22,7 +22,7 @@ describe('ExchangeBuilder', function () {
         it("makes the connection if it hasn't been made yet", function () {
             expect($this->connection)
                 ->toReceive('connect');
-            $this->exchange_builder->build();
+            $this->exchange_builder->get();
         });
 
         it("doesn't make the connection if it's been made already", function () {
@@ -32,7 +32,7 @@ describe('ExchangeBuilder', function () {
             expect($this->connection)
                 ->not
                 ->toReceive('connect');
-            $this->exchange_builder->build();
+            $this->exchange_builder->get();
         });
 
         context('Exchange declaration', function () {
@@ -40,27 +40,27 @@ describe('ExchangeBuilder', function () {
                 expect('AMQPExchange')
                     ->toReceive('setName')
                     ->with($this->exchange_name);
-                $this->exchange_builder->build();
+                $this->exchange_builder->get();
             });
 
             it("sets the exchange to be of type 'topic'", function () {
                 expect('AMQPExchange')
                     ->toReceive('setType')
                     ->with(AMQP_EX_TYPE_TOPIC);
-                $this->exchange_builder->build();
+                $this->exchange_builder->get();
             });
 
             it('sets the exchange as durable', function () {
                 expect('AMQPExchange')
                     ->toReceive('setFlags')
                     ->with(AMQP_DURABLE);
-                $this->exchange_builder->build();
+                $this->exchange_builder->get();
             });
 
             it('declares the exchange', function () {
                 expect('AMQPExchange')
                     ->toReceive('declareExchange');
-                $this->exchange_builder->build();
+                $this->exchange_builder->get();
             });
         });
 
@@ -68,7 +68,7 @@ describe('ExchangeBuilder', function () {
             beforeEach(function () {
                 $this->expectInvalidPropertyException = function () {
                     expect(function () {
-                        $this->exchange_builder->build();
+                        $this->exchange_builder->get();
                     })->toThrow(new InvalidPropertyException);
                 };
             });
