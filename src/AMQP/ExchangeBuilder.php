@@ -6,7 +6,7 @@ use AMQPChannel;
 use AMQPExchange;
 
 /**
- * Responsible for declaring exchanges on a RabbitMQ and returning the
+ * Responsible for declaring exchanges on a RabbitMQ host and returning the
  * AMQPExchange instance.
  */
 class ExchangeBuilder

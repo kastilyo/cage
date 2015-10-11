@@ -7,8 +7,8 @@ use AMQPQueue;
 use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 
 /**
- * Responsible for declaring queues on a RabbitMQ and returning the AMQPQueue
- * instance.
+ * Responsible for declaring queues on a RabbitMQ exchange and returning the
+ * AMQPQueue instance.
  */
 class QueueBuilder
 {
