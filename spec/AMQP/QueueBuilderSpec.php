@@ -74,7 +74,7 @@ describe('QueueBuilder', function () {
             it('binds with the exchange name', function () {
                 expect('AMQPQueue')
                     ->toReceive('bind')
-                    ->with($this->exchange_name, Arg::notToBeNull());
+                    ->with($this->exchange_name, Arg::toBeAny());
                 $this->queue_builder->build();
             });
 
@@ -82,7 +82,7 @@ describe('QueueBuilder', function () {
                 foreach ($this->binding_keys as $binding_key) {
                     expect('AMQPQueue')
                         ->toReceive('bind')
-                        ->with(Arg::notToBeNull(), $binding_key);
+                        ->with(Arg::toBeAny(), $binding_key);
                 }
                 $this->queue_builder->build();
             });
