@@ -2,16 +2,16 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $injector = new Auryn\Injector;
-
-$injector->define('AMQPConnection', [
-    ':credentials' => [
+$injector->share('AMQPConnection');
+$injector->delegate('AMQPConnection', function () {
+    $connection = new AMQPConnection([
         'host' => 'localhost',
         'port' => 5672,
         'login' => 'guest',
         'password' => 'guest',
-    ],
-]);
-
-$injector->define('Kastilyo\RabbitHole\Spec\Subscriber', [
-    ':amqp_connection' => $injector->make('AMQPConnection'),
-]);
+    ]);
+    if (!$connection->isConnected()) {
+        $connection->connect();
+    }
+    return $connection;
+});
