@@ -4,44 +4,17 @@ namespace Kastilyo\RabbitHole\Spec;
 use kahlan\plugin\Stub;
 use kahlan\Arg;
 use AMQPEnvelope;
+use Eloquent\Liberator\Liberator;
 use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
 use Kastilyo\RabbitHole\Subscriber\SubscriberTrait;
 use Kastilyo\RabbitHole\Exceptions\ImplementationException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
 
-describe('SubscriberTrait + SubscriberInterface', function () {
+describe('Subscriber', function () {
     beforeEach(function () {
-        $exchange_name = $this->exchange_name = 'test_exchange';
-        $queue_name = $this->queue_name = 'test_queue';
-        $binding_keys = $this->binding_keys = ['test.info'];
         $this->amqp_connection = Helper::getAMQPConnection();
-        $this->subscriber = Stub::create([
-            'implements' => [SubscriberInterface::class],
-            'uses' => SubscriberTrait::class,
-        ]);
-        // well-behaved implementation
-        Stub::on($this->subscriber)
-            ->methods([
-                'getExchangeName' => function () use ($exchange_name) {
-                    return $exchange_name;
-                },
-                'getQueueName' => function () use ($queue_name) {
-                    return $queue_name;
-                },
-                'getBindingKeys' => function () use ($binding_keys) {
-                    return $binding_keys;
-                },
-                'getBatchCount' => function () {
-                    $subscriber =  Stub::create(['uses' => SubscriberTrait::class]);
-                    // persisting trait implementation of this method to the stub
-                    return $subscriber->getBatchCount();
-                },
-                'processMessage' => function (AMQPEnvelope $amqp_envelope) {
-                    echo $amqp_envelope->getBody(), PHP_EOL;
-                    $this->acknowledgeMessage($amqp_envelope);
-                },
-            ]);
+        $this->subscriber = new Subscriber($this->amqp_connection);
 
         Stub::on(QueueBuilder::class)
             ->method('get')
@@ -79,7 +52,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('sets the exchange name and then builds', function () {
                 expect($this->exchange_builder_spy)
                     ->toReceive('setName')
-                    ->with($this->exchange_name);
+                    ->with($this->subscriber->getExchangeName());
                 expect($this->exchange_builder_spy)
                     ->toReceiveNext('get');
                 $this->subscriber->consume();
@@ -97,21 +70,21 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('sets the queue name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with($this->queue_name);
+                    ->with($this->subscriber->getQueueName());
                 $this->subscriber->consume();
             });
 
             it('sets the exchange name', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setExchangeName')
-                    ->with($this->exchange_name);
+                    ->with($this->subscriber->getExchangeName());
                 $this->subscriber->consume();
             });
 
             it('sets the binding keys', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setBindingKeys')
-                    ->with($this->binding_keys);
+                    ->with($this->subscriber->getBindingKeys());
                 $this->subscriber->consume();
             });
 
@@ -124,15 +97,15 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('calls the above methods in that order', function () {
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
-                    ->with($this->queue_name);
+                    ->with($this->subscriber->getQueueName());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setExchangeName')
-                    ->with($this->exchange_name);
+                    ->with($this->subscriber->getExchangeName());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('setBindingKeys')
-                    ->with($this->binding_keys);
+                    ->with($this->subscriber->getBindingKeys());
 
                 expect($this->queue_builder_spy)
                     ->toReceive('setPrefetchCount')
@@ -211,65 +184,6 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 ->with($expected_delivery_tag, Arg::toBeAny());
 
             $this->subscriber->acknowledgeMessage($message_spy);
-        });
-    });
-
-    context('Batch processing', function () {
-        describe('Batch count limit', function () {
-            beforeEach(function () {
-                Stub::on($this->subscriber)
-                    ->methods([
-                        'getBatchCount' => function () {
-                            return 5;
-                        },
-                        // minimal implementation of a batch consumer
-                        'processMessage' => function (AMQPEnvelope $envelope) {
-                            $this->pushMessage($envelope);
-                            if ($this->hasReachedBatchCount()) {
-                                $this->acknowledgeMessages();
-                            }
-                        },
-                        // stub
-                        'acknowledgeMessage' => function (AMQPEnvelope $envelope) {
-
-                        }
-                    ]);
-                $this->envelopes = array_map(
-                    function ($ignore) {
-                        $envelope = Helper::getAMQPEnvelope();
-                        Stub::on($envelope)
-                            ->method('getDeliveryTag')
-                            ->andReturn('some_delivery_tag');
-                        return $envelope;
-                    },
-                    array_fill(0, 5, null)
-                );
-
-                // process three ahead of time
-                $this->subscriber->processMessage($this->envelopes[0]);
-                $this->subscriber->processMessage($this->envelopes[1]);
-                $this->subscriber->processMessage($this->envelopes[2]);
-            });
-
-            it("doesn't acknowledge messages if the limit hasn't been reached", function () {
-                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[0]);
-                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[1]);
-                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[2]);
-                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[3]);
-                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[4]);
-                $this->subscriber->processMessage($this->envelopes[3]);
-            });
-
-            it('acknowledges messages if the limit has been reached', function () {
-                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[0]);
-                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[1]);
-                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[2]);
-                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[3]);
-                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[4]);
-                $this->subscriber->processMessage($this->envelopes[3]);
-                // should hit limit after this call
-                $this->subscriber->processMessage($this->envelopes[4]);
-            });
         });
     });
 });
