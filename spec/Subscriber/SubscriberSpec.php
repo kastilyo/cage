@@ -31,10 +31,10 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 'getBindingKeys' => function () use ($binding_keys) {
                     return $binding_keys;
                 },
-                '::getBatchCount' => function () {
+                'getBatchCount' => function () {
                     $subscriber =  Stub::create(['uses' => SubscriberTrait::class]);
                     // persisting trait implementation of this method to the stub
-                    return $subscriber::getBatchCount();
+                    return $subscriber->getBatchCount();
                 },
                 'processMessage' => function (AMQPEnvelope $amqp_envelope) {
                     echo $amqp_envelope->getBody(), PHP_EOL;
@@ -67,10 +67,9 @@ describe('SubscriberTrait + SubscriberInterface', function () {
         $this->subscriber->setAMQPConnection($this->amqp_connection);
     });
 
-    describe('::getBatchCount', function () {
+    describe('getBatchCount', function () {
         it('has a default implementation of 1', function () {
-            $klass = get_class($this->subscriber);
-            expect($klass::getBatchCount())->toBe(1);
+            expect($this->subscriber->getBatchCount())->toBe(1);
         });
     });
 
@@ -88,10 +87,9 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
         context('Building the queue', function () {
             it('sets the batch count', function () {
-                $klass = get_class($this->subscriber);
                 expect($this->queue_builder_spy)
                     ->toReceive('setPrefetchCount')
-                    ->with($klass::getBatchCount());
+                    ->with($this->subscriber->getBatchCount());
                 $this->subscriber->consume();
             });
 
@@ -123,8 +121,6 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             });
 
             it('calls the above methods in that order', function () {
-                $klass = get_class($this->subscriber);
-
                 expect($this->queue_builder_spy)
                     ->toReceive('setName')
                     ->with($this->queue_name);
@@ -139,7 +135,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
                 expect($this->queue_builder_spy)
                     ->toReceive('setPrefetchCount')
-                    ->with($klass::getBatchCount());
+                    ->with($this->subscriber->getBatchCount());
 
                 expect($this->queue_builder_spy)
                     ->toReceiveNext('get');
@@ -177,13 +173,13 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
             it('throws an exception when batch count is an empty value', function () {
                 Stub::on($this->subscriber)
-                    ->method('::getBatchCount');
+                    ->method('getBatchCount');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when batch count is non-integer value', function () {
                 Stub::on($this->subscriber)
-                    ->method('::getBatchCount', function () {
+                    ->method('getBatchCount', function () {
                         return 'asdf';
                     });
                 $this->expectImplementationException();

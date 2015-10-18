@@ -32,7 +32,7 @@ interface SubscriberInterface
      * Returns the number of unacknowledged messages to get consume
      * @return int
      */
-    public static function getBatchCount();
+    public function getBatchCount();
 
     /**
      * Handle a message from the queue

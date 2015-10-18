@@ -50,7 +50,7 @@ trait SubscriberTrait
         $this->amqp_connection = $amqp_connection;
     }
 
-    public static function getBatchCount()
+    public function getBatchCount()
     {
         return 1;
     }
@@ -148,7 +148,7 @@ trait SubscriberTrait
 
     private function getAndValidateBatchCount()
     {
-        $batch_count = static::getBatchCount();
+        $batch_count = $this->getBatchCount();
         if (!empty($batch_count) && is_int($batch_count)) {
             return $batch_count;
         }
