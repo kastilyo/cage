@@ -110,7 +110,7 @@ trait SubscriberTrait
      */
     private function getAndValidateExchangeName()
     {
-        $exchange_name = static::getExchangeName();
+        $exchange_name = $this->getExchangeName();
         if (!empty($exchange_name)) {
             return $exchange_name;
         }

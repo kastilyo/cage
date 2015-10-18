@@ -25,7 +25,7 @@ interface SubscriberInterface
      * The name of the exchange associated with the subscribed queue
      * @return string
      */
-    public static function getExchangeName();
+    public function getExchangeName();
 
 
     /**

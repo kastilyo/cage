@@ -22,7 +22,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
         // well-behaved implementation
         Stub::on($this->subscriber)
             ->methods([
-                '::getExchangeName' => function () use ($exchange_name) {
+                'getExchangeName' => function () use ($exchange_name) {
                     return $exchange_name;
                 },
                 '::getQueueName' => function () use ($queue_name) {
@@ -159,7 +159,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
             it('throws an exception when the exchange name is missing', function () {
                 Stub::on($this->subscriber)
-                    ->method('::getExchangeName');
+                    ->method('getExchangeName');
                 $this->expectImplementationException();
             });
 
