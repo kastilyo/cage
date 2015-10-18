@@ -7,7 +7,7 @@ use Kastilyo\RabbitHole\Subscriber\SubscriberTrait;
 use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
 
 /**
- * This is a test SubscriberInterface implementation that mixes in SubscriberTrait.
+ * This is a demo SubscriberInterface implementation that mixes in SubscriberTrait.
  * It represents the intended use of this library.
  */
 class Subscriber implements SubscriberInterface
