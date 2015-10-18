@@ -19,17 +19,17 @@ class Subscriber implements SubscriberInterface
         $this->setAMQPConnection($amqp_connection);
     }
 
-    public static function getExchangeName()
+    public function getExchangeName()
     {
         return 'test_exchange';
     }
 
-    public static function getQueueName()
+    public function getQueueName()
     {
         return 'test_queue';
     }
 
-    public static function getBindingKeys()
+    public function getBindingKeys()
     {
         return ['test.info'];
     }
