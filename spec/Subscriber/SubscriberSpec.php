@@ -90,7 +90,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
             it('sets the batch count', function () {
                 $klass = get_class($this->subscriber);
                 expect($this->queue_builder_spy)
-                    ->toReceive('setBatchCount')
+                    ->toReceive('setPrefetchCount')
                     ->with($klass::getBatchCount());
                 $this->subscriber->consume();
             });
@@ -138,7 +138,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                     ->with($this->binding_keys);
 
                 expect($this->queue_builder_spy)
-                    ->toReceive('setBatchCount')
+                    ->toReceive('setPrefetchCount')
                     ->with($klass::getBatchCount());
 
                 expect($this->queue_builder_spy)

@@ -123,8 +123,8 @@ describe('QueueBuilder', function () {
                 $this->expectInvalidPropertyException();
             });
 
-            it("throws an exception when a batch count of 0 has been set", function () {
-                $this->queue_builder->setBatchCount(0);
+            it("throws an exception when a prefetch count of 0 has been set", function () {
+                $this->queue_builder->setPrefetchCount(0);
                 $this->expectInvalidPropertyException();
             });
         });

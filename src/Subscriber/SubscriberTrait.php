@@ -167,7 +167,7 @@ trait SubscriberTrait
             ->setName($this->getAndValidateQueueName())
             ->setExchangeName($this->getAndValidateExchangeName())
             ->setBindingKeys($this->getAndValidateBindingKeys())
-            ->setBatchCount($this->getAndValidateBatchCount())
+            ->setPrefetchCount($this->getAndValidateBatchCount())
             ->get();
     }
 

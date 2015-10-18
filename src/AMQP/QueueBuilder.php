@@ -36,7 +36,7 @@ class QueueBuilder
      * Number of unacknowledged messages to consume at once
      * @var integer
      */
-    private $batch_count = 1;
+    private $prefetch_count = 1;
 
     /**
      * Creates a fresh AMQPQueue instance, declaring it as durable and with
@@ -47,7 +47,7 @@ class QueueBuilder
     private function build()
     {
         $queue = new AMQPQueue($this->getChannel());
-        $queue->getChannel()->qos(($prefetch_size = 0), $this->getBatchCount());
+        $queue->getChannel()->qos(($prefetch_size = 0), $this->getPrefetchCount());
         $queue->setName($this->getName());
         $queue->setFlags(AMQP_DURABLE);
         $queue->declareQueue();
@@ -81,13 +81,13 @@ class QueueBuilder
         }
     }
 
-    private function getBatchCount()
+    private function getPrefetchCount()
     {
-        if (empty($this->batch_count)) {
-            throw new InvalidPropertyException("Need to set a batch count of 1 or more");
+        if (empty($this->prefetch_count)) {
+            throw new InvalidPropertyException("Need to set a prefetch count of 1 or more");
         }
 
-        return $this->batch_count;
+        return $this->prefetch_count;
     }
 
     /**
@@ -137,11 +137,11 @@ class QueueBuilder
     }
 
     /**
-     * @param int $batch_count Number of unacknowledged messages to consume at once
+     * @param int $prefetch_count Number of unacknowledged messages to consume at once
      */
-    public function setBatchCount($batch_count)
+    public function setPrefetchCount($prefetch_count)
     {
-        $this->batch_count = (int) $batch_count;
+        $this->prefetch_count = (int) $prefetch_count;
         return $this;
     }
 }
