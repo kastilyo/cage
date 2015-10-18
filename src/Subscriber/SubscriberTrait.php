@@ -124,7 +124,7 @@ trait SubscriberTrait
      */
     private function getAndValidateQueueName()
     {
-        $queue_name = static::getQueueName();
+        $queue_name = $this->getQueueName();
         if (!empty($queue_name)) {
             return $queue_name;
         }

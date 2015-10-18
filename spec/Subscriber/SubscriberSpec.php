@@ -25,7 +25,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 'getExchangeName' => function () use ($exchange_name) {
                     return $exchange_name;
                 },
-                '::getQueueName' => function () use ($queue_name) {
+                'getQueueName' => function () use ($queue_name) {
                     return $queue_name;
                 },
                 '::getBindingKeys' => function () use ($binding_keys) {
@@ -165,7 +165,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
             it('throws an exception when the queue name is missing', function () {
                 Stub::on($this->subscriber)
-                    ->method('::getQueueName');
+                    ->method('getQueueName');
                 $this->expectImplementationException();
             });
 
