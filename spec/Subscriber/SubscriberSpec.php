@@ -3,6 +3,7 @@ namespace Kastilyo\RabbitHole\Spec;
 
 use kahlan\plugin\Stub;
 use kahlan\Arg;
+use AMQPEnvelope;
 use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
 use Kastilyo\RabbitHole\Subscriber\SubscriberTrait;
 use Kastilyo\RabbitHole\Exceptions\ImplementationException;
@@ -210,6 +211,65 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 ->with($expected_delivery_tag, Arg::toBeAny());
 
             $this->subscriber->acknowledgeMessage($message_spy);
+        });
+    });
+
+    context('Batch processing', function () {
+        describe('Batch count limit', function () {
+            beforeEach(function () {
+                Stub::on($this->subscriber)
+                    ->methods([
+                        'getBatchCount' => function () {
+                            return 5;
+                        },
+                        // minimal implementation of a batch consumer
+                        'processMessage' => function (AMQPEnvelope $envelope) {
+                            $this->pushMessage($envelope);
+                            if ($this->hasReachedBatchCount()) {
+                                $this->acknowledgeMessages();
+                            }
+                        },
+                        // stub
+                        'acknowledgeMessage' => function (AMQPEnvelope $envelope) {
+
+                        }
+                    ]);
+                $this->envelopes = array_map(
+                    function ($ignore) {
+                        $envelope = Helper::getAMQPEnvelope();
+                        Stub::on($envelope)
+                            ->method('getDeliveryTag')
+                            ->andReturn('some_delivery_tag');
+                        return $envelope;
+                    },
+                    array_fill(0, 5, null)
+                );
+
+                // process three ahead of time
+                $this->subscriber->processMessage($this->envelopes[0]);
+                $this->subscriber->processMessage($this->envelopes[1]);
+                $this->subscriber->processMessage($this->envelopes[2]);
+            });
+
+            it("doesn't acknowledge messages if the limit hasn't been reached", function () {
+                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[0]);
+                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[1]);
+                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[2]);
+                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[3]);
+                expect($this->subscriber)->not->toReceive('acknowledgeMessage')->with($this->envelopes[4]);
+                $this->subscriber->processMessage($this->envelopes[3]);
+            });
+
+            it('acknowledges messages if the limit has been reached', function () {
+                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[0]);
+                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[1]);
+                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[2]);
+                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[3]);
+                expect($this->subscriber)->toReceive('acknowledgeMessage')->with($this->envelopes[4]);
+                $this->subscriber->processMessage($this->envelopes[3]);
+                // should hit limit after this call
+                $this->subscriber->processMessage($this->envelopes[4]);
+            });
         });
     });
 });

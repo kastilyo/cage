@@ -25,6 +25,12 @@ trait SubscriberTrait
     private $amqp_queue;
 
     /**
+     * Array of envelopes to accumulate. Only relevant in a batch processing context.
+     * @var array
+     */
+    protected $amqp_envelopes = [];
+
+    /**
      * Prepares AMQPQueues
      * @var \Kastilyo\RabbitHole\AMQP\QueueBuilder
      */
@@ -187,6 +193,7 @@ trait SubscriberTrait
      */
     public function consume()
     {
+        $this->amqp_envelopes = [];
         $this->buildExchange();
         $this->getQueue()->consume([$this, 'processMessage']);
     }
@@ -198,5 +205,34 @@ trait SubscriberTrait
     public function acknowledgeMessage(AMQPEnvelope $amqp_envelope)
     {
         $this->getQueue()->ack($amqp_envelope->getDeliveryTag());
+    }
+
+    /**
+     * Accumulate a message onto the $amqp_envelopes array
+     * @param  AMQPEnvelope $envelope
+     */
+    protected function pushMessage(AMQPEnvelope $envelope)
+    {
+        $this->amqp_envelopes[] = $envelope;
+    }
+
+    /**
+     * Acknowledges all accumulated messages
+     */
+    protected function acknowledgeMessages()
+    {
+        while ($envelope = array_shift($this->amqp_envelopes)) {
+            $this->acknowledgeMessage($envelope);
+        }
+    }
+
+    /**
+     * Returns whether the number of accumulated messages has reached the
+     * subscriber's defined count
+     * @return boolean
+     */
+    protected function hasReachedBatchCount()
+    {
+        return count($this->amqp_envelopes) >= $this->getBatchCount();
     }
 }
