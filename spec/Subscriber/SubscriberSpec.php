@@ -28,7 +28,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
                 'getQueueName' => function () use ($queue_name) {
                     return $queue_name;
                 },
-                '::getBindingKeys' => function () use ($binding_keys) {
+                'getBindingKeys' => function () use ($binding_keys) {
                     return $binding_keys;
                 },
                 '::getBatchCount' => function () {
@@ -171,7 +171,7 @@ describe('SubscriberTrait + SubscriberInterface', function () {
 
             it('throws an exception when the binding keys are missing', function () {
                 Stub::on($this->subscriber)
-                    ->method('::getBindingKeys');
+                    ->method('getBindingKeys');
                 $this->expectImplementationException();
             });
 

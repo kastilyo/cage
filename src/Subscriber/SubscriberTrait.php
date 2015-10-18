@@ -138,7 +138,7 @@ trait SubscriberTrait
      */
     private function getAndValidateBindingKeys()
     {
-        $binding_keys = static::getBindingKeys();
+        $binding_keys = $this->getBindingKeys();
         if (!empty($binding_keys)) {
             return $binding_keys;
         }

@@ -13,7 +13,7 @@ interface SubscriberInterface
      * The keys bound to the subscribed queue
      * @return array An array of strings
      */
-    public static function getBindingKeys();
+    public function getBindingKeys();
 
     /**
      * The name of the subscribed queue
