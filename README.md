@@ -105,7 +105,7 @@ This library was built using the [calcinai/php-amqplib-bridge](https://github.co
 
 ## Style and Naming Conventions
 
-For the coding style, I tried to follow PSR coding style guidelines. When it came to naming conventions, I suffixed any traits with 'Trait' and interfaces with 'Interface'. Any other file in the 'src' directory should be a class.
+For the coding style, I tried to follow PSR coding style guidelines. When it came to naming conventions, I suffixed any traits with 'Trait' and interfaces with 'Interface'. Any other file in the 'src' directory should be a class. I also used underscored names for variables and properties if only to easily visually distinguish them from methods. There are no functions but if there were, I'd underscore them as well.
 
 ## Testing
 I used the awesome [kahlan](https://github.com/crysalead/kahlan) testing framework.
