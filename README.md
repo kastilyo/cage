@@ -4,9 +4,13 @@
 
 [![Test Coverage](https://codeclimate.com/repos/561a04ca69568021270083bd/badges/14463fc15cd68fefb706/coverage.svg)](https://codeclimate.com/repos/561a04ca69568021270083bd/coverage)
 
-This is a RabbitMQ library heavily inspired by [Hutch](https://github.com/gocardless/hutch). So far, I've only come up with basic subscribing mechanisms. I would like to expand on this by providing support for batch processing. I'm planning to add publishing mechanisms and then support for RPC patterns. And finally, I would like to add running mechanisms ie. managing and running multiple subscribers of varying configurations simultaneously which will likely be the most difficult and at which point it would be considered highly experimental and perhaps an abuse and misuse of PHP as it's not meant for such things.
+This is a RabbitMQ library heavily inspired by [Hutch](https://github.com/gocardless/hutch). So far, I've only come up with basic subscribing mechanisms. I would like to expand on this by providing support for batch processing. I'm planning to add publishing mechanisms and then support for RPC patterns. And finally, I would like to add running mechanisms ie. managing and running multiple subscribers of varying configurations simultaneously which will likely be the most difficult and at which point it would be considered highly experimental and perhaps an abuse and misuse of PHP as it's not typically intended for such things.
 
-RabbitHole provides mechanisms for consuming messages from RabbitMQ exchanges without the low-level boilerplate. The tradeoff for that is that this library operates under several assumptions as to how RabbitMQ is being. Exchanges created by RabbitHole subscribers are durable topic exchanges. Similarly, queues created by RabbitHole subscribers will be durable. Thus, RabbitHole is intended for users who want to deal with minimal loss with RabbitMQ.
+RabbitHole provides mechanisms for consuming messages from RabbitMQ exchanges without the low-level boilerplate. The tradeoff for that is that this library operates under several assumptions as to how RabbitMQ is being used:
+* Exchanges created by RabbitHole subscribers are durable topic exchanges.
+* Similarly, queues created by RabbitHole subscribers will be durable.
+
+Thus, RabbitHole is intended for users who want to minimize data loss.
 
 ## Usage
 
@@ -116,9 +120,8 @@ $ ./vendor/bin/kahlan
 
 ## Credits
 
-- [kastilyo](https://github.com/kastilyo)
+- [kastilyo](https://github.com/kastilyo) aka [markalexandercastillo](https://github.com/markalexandercastillo)
 - [burntbrowniez](https://github.com/burntbrowniez)
-- [markalexandercastillo](https://github.com/markalexandercastillo)
 
 ## License
 
