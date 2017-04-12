@@ -13,11 +13,11 @@
         "calcinai/php-amqplib-bridge": "^0.1.1"
     },
     "require-dev": {
-        "crysalead/kahlan": "^1.1",
         "psy/psysh": "^0.5.2",
         "eloquent/liberator": "^2.0",
         "rdlowrey/auryn": "^1.1",
-        "codeclimate/php-test-reporter": "^0.2.0"
+        "codeclimate/php-test-reporter": "^0.2.0",
+        "kahlan/kahlan": "^3.1"
     },
     "autoload": {
         "psr-4": {
