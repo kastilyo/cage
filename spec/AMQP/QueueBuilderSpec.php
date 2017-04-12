@@ -1,7 +1,7 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\Arg;
+use Kahlan\Arg;
 use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
 

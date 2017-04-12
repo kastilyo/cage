@@ -1,2 +1,2 @@
 <?php
-kahlan\Matcher::register('toBeAny', 'Kastilyo\RabbitHole\Spec\ToBeAny');
+Kahlan\Matcher::register('toBeAny', 'Kastilyo\RabbitHole\Spec\ToBeAny');

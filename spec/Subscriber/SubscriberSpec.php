@@ -1,8 +1,8 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\Arg;
 use Kahlan\Plugin\Double;
+use Kahlan\Arg;
 use AMQPEnvelope;
 use Eloquent\Liberator\Liberator;
 use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
