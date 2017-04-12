@@ -120,7 +120,7 @@ $ ./vendor/bin/kahlan
 
 ## Credits
 
-- [kastilyo](https://github.com/kastilyo) aka [markalexandercastillo](https://github.com/markalexandercastillo)
+- [markalexandercastillo](https://github.com/markalexandercastillo)
 - [burntbrowniez](https://github.com/burntbrowniez)
 
 ## License
