@@ -54,7 +54,8 @@ describe('Subscriber', function () {
                     ->toReceive('setName')
                     ->with($this->subscriber->getExchangeName());
                 expect($this->exchange_builder_spy)
-                    ->toReceiveNext('get');
+                    ->toReceive('get')
+                    ->ordered;
                 $this->subscriber->consume();
             });
         });
@@ -100,19 +101,22 @@ describe('Subscriber', function () {
                     ->with($this->subscriber->getQueueName());
 
                 expect($this->queue_builder_spy)
-                    ->toReceiveNext('setExchangeName')
-                    ->with($this->subscriber->getExchangeName());
+                    ->toReceive('setExchangeName')
+                    ->with($this->subscriber->getExchangeName())
+                    ->ordered;
 
                 expect($this->queue_builder_spy)
-                    ->toReceiveNext('setBindingKeys')
-                    ->with($this->subscriber->getBindingKeys());
+                    ->toReceive('setBindingKeys')
+                    ->with($this->subscriber->getBindingKeys())
+                    ->ordered;
 
                 expect($this->queue_builder_spy)
                     ->toReceive('setPrefetchCount')
                     ->with($this->subscriber->getBatchCount());
 
                 expect($this->queue_builder_spy)
-                    ->toReceiveNext('get');
+                    ->toReceive('get')
+                    ->ordered;
 
                 $this->subscriber->consume();
             });
