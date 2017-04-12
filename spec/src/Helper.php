@@ -1,7 +1,7 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\plugin\Stub;
+use Kahlan\Plugin\Double;
 
 /**
  * Helper class for stubbing third-party AMQP classes
@@ -10,18 +10,18 @@ class Helper
 {
     public static function initializeAMQPStubs()
     {
-        Stub::on('AMQPChannel')->method('__construct');
-        Stub::on('AMQPChannel')->method('qos');
-        Stub::on('AMQPExchange')->method('__construct');
-        Stub::on('AMQPExchange')->method('declareExchange');
-        Stub::on('AMQPQueue')->method('__construct');
-        Stub::on('AMQPQueue')->method('declareQueue');
-        Stub::on('AMQPQueue')->method('bind');
+        allow('AMQPChannel')->toReceive('__construct');
+        allow('AMQPChannel')->toReceive('qos');
+        allow('AMQPExchange')->toReceive('__construct');
+        allow('AMQPExchange')->toReceive('declareExchange');
+        allow('AMQPQueue')->toReceive('__construct');
+        allow('AMQPQueue')->toReceive('declareQueue');
+        allow('AMQPQueue')->toReceive('bind');
     }
 
     public static function getAMQPChannel()
     {
-        return Stub::create([
+        return Double::instance([
             'extends' => 'AMQPChannel',
             'methods' => ['__construct'],
         ]);
@@ -29,7 +29,7 @@ class Helper
 
     public static function getAMQPConnection()
     {
-        return Stub::create([
+        return Double::instance([
             'extends' => 'AMQPConnection',
             'methods' => ['__construct', 'connect', 'isConnected'],
         ]);
@@ -37,7 +37,7 @@ class Helper
 
     public static function getAMQPQueue()
     {
-        return Stub::create([
+        return Double::instance([
             'extends' => 'AMQPQueue',
             'methods' => ['__construct']
         ]);
@@ -45,7 +45,7 @@ class Helper
 
     public static function getAMQPEnvelope()
     {
-        return Stub::create([
+        return Double::instance([
             'extends' => 'AMQPEnvelope',
             'methods' => ['__construct', 'getDeliveryTag']
         ]);

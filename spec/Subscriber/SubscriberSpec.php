@@ -1,8 +1,8 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\plugin\Stub;
 use kahlan\Arg;
+use Kahlan\Plugin\Double;
 use AMQPEnvelope;
 use Eloquent\Liberator\Liberator;
 use Kastilyo\RabbitHole\Subscriber\SubscriberInterface;
@@ -16,25 +16,25 @@ describe('Subscriber', function () {
         $this->amqp_connection = Helper::getAMQPConnection();
         $this->subscriber = new Subscriber($this->amqp_connection);
 
-        Stub::on(QueueBuilder::class)
-            ->method('get')
+        allow(QueueBuilder::class)
+            ->toReceive('get')
             ->andReturn(($this->amqp_queue_spy = Helper::getAMQPQueue()));
 
-        Stub::on(ExchangeBuilder::class)
-            ->method('get');
+        allow(ExchangeBuilder::class)
+            ->toReceive('get');
 
-        $this->queue_builder_spy = Stub::create([
+        $this->queue_builder_spy = Double::instance([
             'extends' => QueueBuilder::class,
             'methods' => ['__construct']
         ]);
 
-        $this->exchange_builder_spy = Stub::create([
+        $this->exchange_builder_spy = Double::instance([
             'extends' => ExchangeBuilder::class,
             'methods' => ['__construct']
         ]);
 
-        Stub::on($this->amqp_queue_spy)
-            ->method('consume');
+        allow($this->amqp_queue_spy)
+            ->toReceive('consume');
 
         $this->subscriber->setQueueBuilder($this->queue_builder_spy);
         $this->subscriber->setExchangeBuilder($this->exchange_builder_spy);
@@ -128,34 +128,33 @@ describe('Subscriber', function () {
             });
 
             it('throws an exception when the exchange name is missing', function () {
-                Stub::on($this->subscriber)
-                    ->method('getExchangeName');
+                allow($this->subscriber)
+                    ->toReceive('getExchangeName');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when the queue name is missing', function () {
-                Stub::on($this->subscriber)
-                    ->method('getQueueName');
+                allow($this->subscriber)
+                    ->toReceive('getQueueName');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when the binding keys are missing', function () {
-                Stub::on($this->subscriber)
-                    ->method('getBindingKeys');
+                allow($this->subscriber)
+                    ->toReceive('getBindingKeys');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when batch count is an empty value', function () {
-                Stub::on($this->subscriber)
-                    ->method('getBatchCount');
+                allow($this->subscriber)
+                    ->toReceive('getBatchCount');
                 $this->expectImplementationException();
             });
 
             it('throws an exception when batch count is non-integer value', function () {
-                Stub::on($this->subscriber)
-                    ->method('getBatchCount', function () {
-                        return 'asdf';
-                    });
+                allow($this->subscriber)
+                    ->toReceive('getBatchCount')
+                    ->andReturn('asdf');
                 $this->expectImplementationException();
             });
         });
@@ -172,12 +171,12 @@ describe('Subscriber', function () {
         it("calls ack on the queue, passing in the message's delivery tag", function () {
             $expected_delivery_tag = 'some_delivery_tag';
             $message_spy = Helper::getAMQPEnvelope();
-            Stub::on($message_spy)
-                ->method('getDeliveryTag')
+            allow($message_spy)
+                ->toReceive('getDeliveryTag')
                 ->andReturn($expected_delivery_tag);
 
-            Stub::on($this->amqp_queue_spy)
-                ->method('ack', function ($delivery_tag, $flags = AMQP_NOPARAM) {});
+            allow($this->amqp_queue_spy)
+                ->toReceive('ack');
 
             expect($this->amqp_queue_spy)
                 ->toReceive('ack')

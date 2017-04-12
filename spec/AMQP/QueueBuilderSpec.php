@@ -1,7 +1,6 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\plugin\Stub;
 use kahlan\Arg;
 use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 use Kastilyo\RabbitHole\AMQP\QueueBuilder;
@@ -11,8 +10,8 @@ describe('QueueBuilder', function () {
         Helper::initializeAMQPStubs();
         $this->connection = Helper::getAMQPConnection();
         $this->channel = Helper::getAMQPChannel();
-        Stub::on('AMQPQueue')
-            ->method('getChannel')
+        allow('AMQPQueue')
+            ->toReceive('getChannel')
             ->andReturn($this->channel);
         $this->queue_builder = new QueueBuilder($this->connection);
     });
@@ -36,8 +35,8 @@ describe('QueueBuilder', function () {
         });
 
         it("doesn't make the connection if it's been made already", function () {
-            Stub::on($this->connection)
-                ->method('isConnected')
+            allow($this->connection)
+                ->toReceive('isConnected')
                 ->andReturn(true);
             expect($this->connection)
                 ->not

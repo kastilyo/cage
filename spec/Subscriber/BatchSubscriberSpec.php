@@ -1,7 +1,6 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\plugin\Stub;
 use kahlan\Arg;
 use AMQPEnvelope;
 use Eloquent\Liberator\Liberator;
@@ -22,15 +21,15 @@ describe('BatchSubscriber', function () {
             $this->envelopes = array_map(
                 function ($ignore) {
                     $envelope = Helper::getAMQPEnvelope();
-                    Stub::on($envelope)
-                        ->method('getDeliveryTag')
+                    allow($envelope)
+                        ->toReceive('getDeliveryTag')
                         ->andReturn('some_delivery_tag');
                     return $envelope;
                 },
                 array_fill(0, $this->batch_subscriber->getBatchCount(), null)
             );
 
-            Stub::on($this->batch_subscriber)->method('acknowledgeMessage');
+            allow($this->batch_subscriber)->toReceive('acknowledgeMessage');
 
             // process three ahead of time
             $this->batch_subscriber->processMessage($this->envelopes[0]);

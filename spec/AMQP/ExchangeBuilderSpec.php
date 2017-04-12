@@ -1,7 +1,6 @@
 <?php
 namespace Kastilyo\RabbitHole\Spec;
 
-use kahlan\plugin\Stub;
 use kahlan\Arg;
 use Kastilyo\RabbitHole\Exceptions\InvalidPropertyException;
 use Kastilyo\RabbitHole\AMQP\ExchangeBuilder;
@@ -26,8 +25,8 @@ describe('ExchangeBuilder', function () {
         });
 
         it("doesn't make the connection if it's been made already", function () {
-            Stub::on($this->connection)
-                ->method('isConnected')
+            allow($this->connection)
+                ->toReceive('isConnected')
                 ->andReturn(true);
             expect($this->connection)
                 ->not
